@@ -168,11 +168,11 @@ MiniHues.setup = function(config)
   -- Export module
   _G.MiniHues = MiniHues
 
-  -- Setup config
-  config = H.setup_config(config)
+	-- Setup config
+	config = H.setup_config(config)
 
-  -- Apply config
-  H.apply_config(config)
+	-- Apply config
+	H.apply_config(config)
 end
 
 --- Defaults ~
@@ -251,26 +251,26 @@ end
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'blue' })
 --- <
 MiniHues.config = {
-  -- **Required** base colors as '#rrggbb' hex strings
-  background = nil,
-  foreground = nil,
+	-- **Required** base colors as '#rrggbb' hex strings
+	background = nil,
+	foreground = nil,
 
-  -- Number of hues used for non-base colors
-  n_hues = 8,
+	-- Number of hues used for non-base colors
+	n_hues = 8,
 
-  -- Saturation. One of 'low', 'lowmedium', 'medium', 'mediumhigh', 'high'.
-  saturation = 'medium',
+	-- Saturation. One of 'low', 'lowmedium', 'medium', 'mediumhigh', 'high'.
+	saturation = "medium",
 
-  -- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'green',
-  -- 'cyan', 'azure', 'blue', 'purple'
-  accent = 'bg',
+	-- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'green',
+	-- 'cyan', 'azure', 'blue', 'purple'
+	accent = "bg",
 
-  -- Plugin integrations. Use `default = false` to disable all integrations.
-  -- Also can be set per plugin (see |MiniHues.config|).
-  plugins = { default = true },
+	-- Plugin integrations. Use `default = false` to disable all integrations.
+	-- Also can be set per plugin (see |MiniHues.config|).
+	plugins = { default = true },
 
-  -- Whether to auto adjust highlight groups based on certain events
-  autoadjust = true,
+	-- Whether to auto adjust highlight groups based on certain events
+	autoadjust = true,
 }
 --minidoc_afterlines_end
 
@@ -352,30 +352,30 @@ MiniHues.config = {
 ---
 ---@seealso |MiniHues.get_palette()|
 MiniHues.make_palette = function(config)
-  config = vim.tbl_deep_extend('force', MiniHues.config, config or {})
-  local bg = H.validate_hex(config.background, 'background')
-  local fg = H.validate_hex(config.foreground, 'foreground')
-  local n_hues = H.validate_n_hues(config.n_hues)
-  local saturation = H.validate_one_of(config.saturation, H.saturation_values, 'saturation')
-  local accent = H.validate_one_of(config.accent, H.accent_values, 'accent')
+	config = vim.tbl_deep_extend("force", MiniHues.config, config or {})
+	local bg = H.validate_hex(config.background, "background")
+	local fg = H.validate_hex(config.foreground, "foreground")
+	local n_hues = H.validate_n_hues(config.n_hues)
+	local saturation = H.validate_one_of(config.saturation, H.saturation_values, "saturation")
+	local accent = H.validate_one_of(config.accent, H.accent_values, "accent")
 
-  local bg_lch, fg_lch = H.hex2oklch(bg), H.hex2oklch(fg)
-  local bg_l, fg_l = bg_lch.l, fg_lch.l
-  if not ((bg_l <= 50 and 50 < fg_l) or (fg_l <= 50 and 50 < bg_l)) then
-    H.error('`background` and `foreground` should have opposite lightness.')
-  end
+	local bg_lch, fg_lch = H.hex2oklch(bg), H.hex2oklch(fg)
+	local bg_l, fg_l = bg_lch.l, fg_lch.l
+	if not ((bg_l <= 50 and 50 < fg_l) or (fg_l <= 50 and 50 < bg_l)) then
+		H.error("`background` and `foreground` should have opposite lightness.")
+	end
 
-  -- Reference lightness levels
-  local is_dark = bg_l <= 50
-  local l_bg_edge = is_dark and 0 or 100
-  local l_fg_edge = is_dark and 100 or 0
-  local l_mid = 0.5 * (bg_l + fg_l)
+	-- Reference lightness levels
+	local is_dark = bg_l <= 50
+	local l_bg_edge = is_dark and 0 or 100
+	local l_fg_edge = is_dark and 100 or 0
+	local l_mid = 0.5 * (bg_l + fg_l)
 
-  -- Configurable chroma level
-  local chroma = ({ low = 4, lowmedium = 6, medium = 8, mediumhigh = 12, high = 16 })[saturation]
+	-- Configurable chroma level
+	local chroma = ({ low = 4, lowmedium = 6, medium = 8, mediumhigh = 12, high = 16 })[saturation]
 
-  -- Hues
-  local hues = H.make_hues(bg_lch.h, fg_lch.h, n_hues)
+	-- Hues
+	local hues = H.make_hues(bg_lch.h, fg_lch.h, n_hues)
 
   -- Compute result
   --stylua: ignore
@@ -433,7 +433,7 @@ MiniHues.make_palette = function(config)
     res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues[accent] })
   end
 
-  return res
+	return res
 end
 
 -- stylua: ignore
@@ -516,7 +516,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('EndOfBuffer',    { fg=p.bg_mid2, bg=nil })
   hi('ErrorMsg',       { fg=p.red,     bg=nil })
   hi('FloatBorder',    { fg=p.accent,  bg=p.bg_edge })
-  hi('FloatTitle',     { fg=p.accent,  bg=p.bg_edge, bold=true })
+  hi('FloatTitle',     { fg=p.accent,  bg=p.bg_edge2, bold=true })
   hi('FoldColumn',     { fg=p.bg_mid2, bg=nil })
   hi('Folded',         { fg=p.fg_mid2, bg=p.bg_edge })
   hi('IncSearch',      { fg=p.bg,      bg=p.yellow })
@@ -915,6 +915,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     -- @tag
     hi('@tag.attribute', { link='@tag' })
     hi('@tag.delimiter', { link='@punctuation' })
+    hi('@tag.tsx', { fg=p.cyan, bg=nil, bold=true })
   end
 
   -- Plugins
@@ -1114,16 +1115,28 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration('folke/snacks.nvim') then
-    hi('SnacksPickerBufFlags',           { link='Comment' })
-    hi('SnacksPickerDir',                { link='Comment' })
+    hi('SnacksPickerBufFlags', { link = 'Comment' })
+    hi('SnacksPickerDir',                { fg=p.bg_mid2, bg=p.bg_edge2 })
     hi('SnacksPickerGitStatusIgnored',   { link='Comment' })
     hi('SnacksPickerGitStatusUntracked', { link='Comment' })
     hi('SnacksPickerKeymapRhs',          { link='Comment' })
-    hi('SnacksPickerListCursorLine',     { link='CursorLine' })
+    hi('SnacksPickerListCursorLine',     { fg=nil, bg=p.bg_mid, bold=true })
     hi('SnacksPickerPathHidden',         { link='Comment' })
     hi('SnacksPickerPathIgnored',        { link='Comment' })
     hi('SnacksPickerTotals',             { link='Comment' })
     hi('SnacksPickerUnselected',         { link='Comment' })
+
+    hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true, underline=true })
+    hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
+    hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })
+    hi("SnacksPickerBoxTitle", { fg = p.red, bg = p.bg, bold = true })
+
+    hi("SnacksPickerPreviewBorder", { fg = p.bg_edge, bg = p.bg_edge })
+    hi("SnacksPickerListBorder", { fg = p.bg_edge, bg = p.bg_edge })
+    hi("SnacksPickerBoxBorder", { fg = p.bg_edge, bg = p.bg_edge })
+    hi("SnacksPickerInputBorder", { fg = p.bg_edge, bg = p.bg_edge })
+    hi("SnacksPickerInput", { fg=p.accent, bg=p.bg_edge, bold=true })
+
   end
 
   -- folke/trouble.nvim
@@ -1620,7 +1633,9 @@ end
 ---
 ---@return table Table with structure as |MiniHues.make_palette()| output that was
 ---   the latest applied (via |MiniHues.apply_palette()|) palette.
-MiniHues.get_palette = function() return vim.deepcopy(H.palette) end
+MiniHues.get_palette = function()
+	return vim.deepcopy(H.palette)
+end
 
 --- Generate random base colors
 ---
@@ -1656,16 +1671,20 @@ MiniHues.get_palette = function() return vim.deepcopy(H.palette) end
 ---@return table Table with <background> and <foreground> fields containing
 ---   color hex strings.
 MiniHues.gen_random_base_colors = function(opts)
-  opts = opts or {}
-  local gen_hue = opts.gen_hue or function() return math.random(0, 359) end
-  if not vim.is_callable(gen_hue) then H.error('`gen_hue` should be callable.') end
+	opts = opts or {}
+	local gen_hue = opts.gen_hue or function()
+		return math.random(0, 359)
+	end
+	if not vim.is_callable(gen_hue) then
+		H.error("`gen_hue` should be callable.")
+	end
 
-  local is_dark = vim.o.background == 'dark'
-  local bg_l = is_dark and 15 or 90
-  local fg_l = is_dark and 80 or 20
-  local bg_c = is_dark and 3 or 1
+	local is_dark = vim.o.background == "dark"
+	local bg_l = is_dark and 15 or 90
+	local fg_l = is_dark and 80 or 20
+	local bg_c = is_dark and 3 or 1
 
-  local hue = gen_hue() % 360
+	local hue = gen_hue() % 360
   --stylua: ignore
   return {
     background = H.oklch2hex({ l = bg_l, c = bg_c, h = hue }),
@@ -1680,9 +1699,9 @@ H.default_config = vim.deepcopy(MiniHues.config)
 -- Color conversion constants
 H.tau = 2 * math.pi
 
-H.saturation_values = { 'low', 'lowmedium', 'medium', 'mediumhigh', 'high' }
+H.saturation_values = { "low", "lowmedium", "medium", "mediumhigh", "high" }
 
-H.accent_values = { 'bg', 'fg', 'red', 'orange', 'yellow', 'green', 'cyan', 'azure', 'blue', 'purple' }
+H.accent_values = { "bg", "fg", "red", "orange", "yellow", "green", "cyan", "azure", "blue", "purple" }
 
 -- Cusps for Oklch color space. See 'mini.colors' for more details.
 --stylua: ignore start
@@ -1744,68 +1763,80 @@ H.palette = nil
 -- Helper functionality =======================================================
 -- Settings -------------------------------------------------------------------
 H.setup_config = function(config)
-  H.check_type('config', config, 'table', true)
-  config = vim.tbl_deep_extend('force', vim.deepcopy(H.default_config), config or {})
+	H.check_type("config", config, "table", true)
+	config = vim.tbl_deep_extend("force", vim.deepcopy(H.default_config), config or {})
 
-  if config.background == nil or config.foreground == nil then
-    H.error('`setup()` needs both `background` and `foreground`.')
-  end
+	if config.background == nil or config.foreground == nil then
+		H.error("`setup()` needs both `background` and `foreground`.")
+	end
 
-  H.validate_hex(config.background, 'background')
-  H.validate_hex(config.foreground, 'foreground')
-  H.validate_n_hues(config.n_hues)
-  if not vim.tbl_contains(H.saturation_values, config.saturation) then
-    H.error('`saturation` should be one of ' .. table.concat(vim.tbl_map(vim.inspect, H.saturation_values), ', '))
-  end
-  if not vim.tbl_contains(H.accent_values, config.accent) then
-    H.error('`accent` should be one of ' .. table.concat(vim.tbl_map(vim.inspect, H.accent_values), ', '))
-  end
-  H.check_type('plugins', config.plugins, 'table')
-  H.check_type('autoadjust', config.autoadjust, 'boolean')
+	H.validate_hex(config.background, "background")
+	H.validate_hex(config.foreground, "foreground")
+	H.validate_n_hues(config.n_hues)
+	if not vim.tbl_contains(H.saturation_values, config.saturation) then
+		H.error("`saturation` should be one of " .. table.concat(vim.tbl_map(vim.inspect, H.saturation_values), ", "))
+	end
+	if not vim.tbl_contains(H.accent_values, config.accent) then
+		H.error("`accent` should be one of " .. table.concat(vim.tbl_map(vim.inspect, H.accent_values), ", "))
+	end
+	H.check_type("plugins", config.plugins, "table")
+	H.check_type("autoadjust", config.autoadjust, "boolean")
 
-  return config
+	return config
 end
 
 H.apply_config = function(config)
-  MiniHues.config = config
+	MiniHues.config = config
 
-  -- Apply palette
-  local opts = { autoadjust = config.autoadjust }
-  MiniHues.apply_palette(MiniHues.make_palette(config), config.plugins, opts)
+	-- Apply palette
+	local opts = { autoadjust = config.autoadjust }
+	MiniHues.apply_palette(MiniHues.make_palette(config), config.plugins, opts)
 end
 
 -- Palette --------------------------------------------------------------------
 H.make_hues = function(bg_h, fg_h, n_hues)
-  local res = { bg = bg_h, fg = fg_h }
-  if n_hues == 0 then return res end
+	local res = { bg = bg_h, fg = fg_h }
+	if n_hues == 0 then
+		return res
+	end
 
-  -- Generate equidistant circular grid of hues which is the most distant from
-  -- background and foreground hues. Distance between two sets is assumed as
-  -- minimum distance between all pairs of points.
-  local period = 360 / n_hues
-  local half_period = 0.5 * period
+	-- Generate equidistant circular grid of hues which is the most distant from
+	-- background and foreground hues. Distance between two sets is assumed as
+	-- minimum distance between all pairs of points.
+	local period = 360 / n_hues
+	local half_period = 0.5 * period
 
-  -- - Compute delta which determines the furthest grid
-  local d
-  if bg_h == nil and fg_h == nil then d = 0 end
-  if bg_h ~= nil and fg_h == nil then d = (bg_h % period + half_period) % period end
-  if bg_h == nil and fg_h ~= nil then d = (fg_h % period + half_period) % period end
-  if bg_h ~= nil and fg_h ~= nil then
-    local ref_bg, ref_fg = bg_h % period, fg_h % period
-    local mid = 0.5 * (ref_bg + ref_fg)
-    local mid_alt = (mid + half_period) % period
+	-- - Compute delta which determines the furthest grid
+	local d
+	if bg_h == nil and fg_h == nil then
+		d = 0
+	end
+	if bg_h ~= nil and fg_h == nil then
+		d = (bg_h % period + half_period) % period
+	end
+	if bg_h == nil and fg_h ~= nil then
+		d = (fg_h % period + half_period) % period
+	end
+	if bg_h ~= nil and fg_h ~= nil then
+		local ref_bg, ref_fg = bg_h % period, fg_h % period
+		local mid = 0.5 * (ref_bg + ref_fg)
+		local mid_alt = (mid + half_period) % period
 
-    d = H.dist_period(mid, ref_bg, period) < H.dist_period(mid_alt, ref_bg, period) and mid_alt or mid
-  end
+		d = H.dist_period(mid, ref_bg, period) < H.dist_period(mid_alt, ref_bg, period) and mid_alt or mid
+	end
 
-  local grid = {}
-  for i = 0, n_hues - 1 do
-    table.insert(grid, i * period + d)
-  end
+	local grid = {}
+	for i = 0, n_hues - 1 do
+		table.insert(grid, i * period + d)
+	end
 
-  -- Normalize equidistant grid to be base 8 colors
-  local dist_fun = function(x, y) return H.dist_period(x, y, 360) end
-  local approx = function(ref_hue) return H.get_closest(ref_hue, grid, dist_fun) end
+	-- Normalize equidistant grid to be base 8 colors
+	local dist_fun = function(x, y)
+		return H.dist_period(x, y, 360)
+	end
+	local approx = function(ref_hue)
+		return H.get_closest(ref_hue, grid, dist_fun)
+	end
 
   --stylua: ignore start
   res.red    = approx(0)
@@ -1816,265 +1847,313 @@ H.make_hues = function(bg_h, fg_h, n_hues)
   res.azure  = approx(225)
   res.blue   = approx(270)
   res.purple = approx(315)
-  --stylua: ignore end
+	--stylua: ignore end
 
-  return res
+	return res
 end
 
 H.validate_hex = function(x, name)
-  if type(x) == 'string' and x:find('^#%x%x%x%x%x%x$') ~= nil then return x end
-  local msg = string.format('`%s` should be hex color string in the form "#rrggbb", not %s', name, vim.inspect(x))
-  H.error(msg)
+	if type(x) == "string" and x:find("^#%x%x%x%x%x%x$") ~= nil then
+		return x
+	end
+	local msg = string.format('`%s` should be hex color string in the form "#rrggbb", not %s', name, vim.inspect(x))
+	H.error(msg)
 end
 
 H.validate_n_hues = function(x)
-  if type(x) == 'number' and 0 <= x and x <= 8 then return x end
-  local msg = string.format('`n_hues` should be a number between 0 and 8', name)
-  H.error(msg)
+	if type(x) == "number" and 0 <= x and x <= 8 then
+		return x
+	end
+	local msg = string.format("`n_hues` should be a number between 0 and 8", name)
+	H.error(msg)
 end
 
 H.validate_one_of = function(x, choices, name)
-  if vim.tbl_contains(choices, x) then return x end
-  local choices_string = table.concat(vim.tbl_map(vim.inspect, choices), ', ')
-  local msg = string.format('`%s` should be one of %s', name, choices_string)
-  H.error(msg)
+	if vim.tbl_contains(choices, x) then
+		return x
+	end
+	local choices_string = table.concat(vim.tbl_map(vim.inspect, choices), ", ")
+	local msg = string.format("`%s` should be one of %s", name, choices_string)
+	H.error(msg)
 end
 
 -- Color conversion -----------------------------------------------------------
-H.hex2oklch = function(hex) return H.oklab2oklch(H.rgb2oklab(H.hex2rgb(hex))) end
+H.hex2oklch = function(hex)
+	return H.oklab2oklch(H.rgb2oklab(H.hex2rgb(hex)))
+end
 
-H.oklch2hex = function(lch) return H.rgb2hex(H.oklab2rgb(H.oklch2oklab(H.clip_to_gamut(lch)))) end
+H.oklch2hex = function(lch)
+	return H.rgb2hex(H.oklab2rgb(H.oklch2oklab(H.clip_to_gamut(lch))))
+end
 
 -- HEX <-> RGB in [0; 255]
 H.hex2rgb = function(hex)
-  local dec = tonumber(hex:sub(2), 16)
+	local dec = tonumber(hex:sub(2), 16)
 
-  local b = math.fmod(dec, 256)
-  local g = math.fmod((dec - b) / 256, 256)
-  local r = math.floor(dec / 65536)
+	local b = math.fmod(dec, 256)
+	local g = math.fmod((dec - b) / 256, 256)
+	local r = math.floor(dec / 65536)
 
-  return { r = r, g = g, b = b }
+	return { r = r, g = g, b = b }
 end
 
 H.rgb2hex = function(rgb)
-  -- Use straightforward clipping to [0; 255] here to ensure correctness.
-  -- Modify `rgb` prior to this to ensure only a small distortion.
-  local r = H.clip(H.round(rgb.r), 0, 255)
-  local g = H.clip(H.round(rgb.g), 0, 255)
-  local b = H.clip(H.round(rgb.b), 0, 255)
+	-- Use straightforward clipping to [0; 255] here to ensure correctness.
+	-- Modify `rgb` prior to this to ensure only a small distortion.
+	local r = H.clip(H.round(rgb.r), 0, 255)
+	local g = H.clip(H.round(rgb.g), 0, 255)
+	local b = H.clip(H.round(rgb.b), 0, 255)
 
-  return string.format('#%02x%02x%02x', r, g, b)
+	return string.format("#%02x%02x%02x", r, g, b)
 end
 
 -- RGB in [0; 255] <-> Oklab
 -- https://bottosson.github.io/posts/oklab/#converting-from-linear-srgb-to-oklab
 H.rgb2oklab = function(rgb)
-  -- Convert to linear RGB
-  local r, g, b = H.correct_channel(rgb.r / 255), H.correct_channel(rgb.g / 255), H.correct_channel(rgb.b / 255)
+	-- Convert to linear RGB
+	local r, g, b = H.correct_channel(rgb.r / 255), H.correct_channel(rgb.g / 255), H.correct_channel(rgb.b / 255)
 
-  -- Convert to Oklab
-  local l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b
-  local m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b
-  local s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b
+	-- Convert to Oklab
+	local l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b
+	local m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b
+	local s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b
 
-  local l_, m_, s_ = H.cuberoot(l), H.cuberoot(m), H.cuberoot(s)
+	local l_, m_, s_ = H.cuberoot(l), H.cuberoot(m), H.cuberoot(s)
 
-  local L = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_
-  local A = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_
-  local B = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_
+	local L = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_
+	local A = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_
+	local B = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_
 
-  -- Explicitly convert to gray for nearly achromatic colors
-  if math.abs(A) < 1e-4 then A = 0 end
-  if math.abs(B) < 1e-4 then B = 0 end
+	-- Explicitly convert to gray for nearly achromatic colors
+	if math.abs(A) < 1e-4 then
+		A = 0
+	end
+	if math.abs(B) < 1e-4 then
+		B = 0
+	end
 
-  -- Normalize to appropriate range
-  return { l = H.correct_lightness(100 * L), a = 100 * A, b = 100 * B }
+	-- Normalize to appropriate range
+	return { l = H.correct_lightness(100 * L), a = 100 * A, b = 100 * B }
 end
 
 H.oklab2rgb = function(lab)
-  local L, A, B = 0.01 * H.correct_lightness_inv(lab.l), 0.01 * lab.a, 0.01 * lab.b
+	local L, A, B = 0.01 * H.correct_lightness_inv(lab.l), 0.01 * lab.a, 0.01 * lab.b
 
-  local l_ = L + 0.3963377774 * A + 0.2158037573 * B
-  local m_ = L - 0.1055613458 * A - 0.0638541728 * B
-  local s_ = L - 0.0894841775 * A - 1.2914855480 * B
+	local l_ = L + 0.3963377774 * A + 0.2158037573 * B
+	local m_ = L - 0.1055613458 * A - 0.0638541728 * B
+	local s_ = L - 0.0894841775 * A - 1.2914855480 * B
 
-  local l = l_ * l_ * l_
-  local m = m_ * m_ * m_
-  local s = s_ * s_ * s_
+	local l = l_ * l_ * l_
+	local m = m_ * m_ * m_
+	local s = s_ * s_ * s_
 
   --stylua: ignore
   local r =  4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
-  local g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
-  local b = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+	local g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
+	local b = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
 
-  return { r = 255 * H.correct_channel_inv(r), g = 255 * H.correct_channel_inv(g), b = 255 * H.correct_channel_inv(b) }
+	return { r = 255 * H.correct_channel_inv(r), g = 255 * H.correct_channel_inv(g), b = 255 * H.correct_channel_inv(b) }
 end
 
 -- Oklab <-> Oklch
 H.oklab2oklch = function(lab)
-  local c = math.sqrt(lab.a ^ 2 + lab.b ^ 2)
-  -- Treat grays specially
-  local h = nil
-  if c > 0 then h = H.rad2degree(math.atan2(lab.b, lab.a)) end
-  return { l = lab.l, c = c, h = h }
+	local c = math.sqrt(lab.a ^ 2 + lab.b ^ 2)
+	-- Treat grays specially
+	local h = nil
+	if c > 0 then
+		h = H.rad2degree(math.atan2(lab.b, lab.a))
+	end
+	return { l = lab.l, c = c, h = h }
 end
 
 H.oklch2oklab = function(lch)
-  -- Treat grays specially
-  if lch.c <= 0 or lch.h == nil then return { l = lch.l, a = 0, b = 0 } end
+	-- Treat grays specially
+	if lch.c <= 0 or lch.h == nil then
+		return { l = lch.l, a = 0, b = 0 }
+	end
 
-  local a = lch.c * math.cos(H.degree2rad(lch.h))
-  local b = lch.c * math.sin(H.degree2rad(lch.h))
-  return { l = lch.l, a = a, b = b }
+	local a = lch.c * math.cos(H.degree2rad(lch.h))
+	local b = lch.c * math.sin(H.degree2rad(lch.h))
+	return { l = lch.l, a = a, b = b }
 end
 
 -- Degree in [0; 360] <-> Radian in [0; 2*pi]
-H.rad2degree = function(x) return (x % H.tau) * 360 / H.tau end
+H.rad2degree = function(x)
+	return (x % H.tau) * 360 / H.tau
+end
 
-H.degree2rad = function(x) return (x % 360) * H.tau / 360 end
+H.degree2rad = function(x)
+	return (x % 360) * H.tau / 360
+end
 
 -- Functions for RGB channel correction. Assumes input in [0; 1] range
 -- https://bottosson.github.io/posts/colorwrong/#what-can-we-do%3F
-H.correct_channel = function(x) return 0.04045 < x and math.pow((x + 0.055) / 1.055, 2.4) or (x / 12.92) end
+H.correct_channel = function(x)
+	return 0.04045 < x and math.pow((x + 0.055) / 1.055, 2.4) or (x / 12.92)
+end
 
 H.correct_channel_inv = function(x)
-  return (0.0031308 >= x) and (12.92 * x) or (1.055 * math.pow(x, 0.416666667) - 0.055)
+	return (0.0031308 >= x) and (12.92 * x) or (1.055 * math.pow(x, 0.416666667) - 0.055)
 end
 
 -- Functions for lightness correction
 -- https://bottosson.github.io/posts/colorpicker/#intermission---a-new-lightness-estimate-for-oklab
 H.correct_lightness = function(x)
-  x = 0.01 * x
-  local k1, k2 = 0.206, 0.03
-  local k3 = (1 + k1) / (1 + k2)
+	x = 0.01 * x
+	local k1, k2 = 0.206, 0.03
+	local k3 = (1 + k1) / (1 + k2)
 
-  local res = 0.5 * (k3 * x - k1 + math.sqrt((k3 * x - k1) ^ 2 + 4 * k2 * k3 * x))
-  return 100 * res
+	local res = 0.5 * (k3 * x - k1 + math.sqrt((k3 * x - k1) ^ 2 + 4 * k2 * k3 * x))
+	return 100 * res
 end
 
 H.correct_lightness_inv = function(x)
-  x = 0.01 * x
-  local k1, k2 = 0.206, 0.03
-  local k3 = (1 + k1) / (1 + k2)
-  local res = (x / k3) * (x + k1) / (x + k2)
-  return 100 * res
+	x = 0.01 * x
+	local k1, k2 = 0.206, 0.03
+	local k3 = (1 + k1) / (1 + k2)
+	local res = (x / k3) * (x + k1) / (x + k2)
+	return 100 * res
 end
 
 -- Get gamut ranges for Lch point. More info in 'mini.colors'.
 H.get_gamut_points = function(lch)
-  local c, l = lch.c, H.clip(lch.l, 0, 100)
-  l = H.correct_lightness_inv(l)
-  local cusp = H.cusps[math.floor(lch.h % 360)]
-  local c_cusp, l_cusp = cusp[1], cusp[2]
+	local c, l = lch.c, H.clip(lch.l, 0, 100)
+	l = H.correct_lightness_inv(l)
+	local cusp = H.cusps[math.floor(lch.h % 360)]
+	local c_cusp, l_cusp = cusp[1], cusp[2]
 
-  -- Maximum allowed chroma. Used for computing saturation.
-  local c_upper = l <= l_cusp and (c_cusp * l / l_cusp) or (c_cusp * (100 - l) / (100 - l_cusp))
-  c_upper = H.clip(c_upper, 0, math.huge)
+	-- Maximum allowed chroma. Used for computing saturation.
+	local c_upper = l <= l_cusp and (c_cusp * l / l_cusp) or (c_cusp * (100 - l) / (100 - l_cusp))
+	c_upper = H.clip(c_upper, 0, math.huge)
 
-  -- Other points can be computed only in presence of actual chroma
-  if c == nil then return { c_upper = c_upper } end
+	-- Other points can be computed only in presence of actual chroma
+	if c == nil then
+		return { c_upper = c_upper }
+	end
 
-  -- Intersection of segment between (c, l) and (0, l_cusp) with gamut boundary
-  -- Used for gamut clipping
-  local c_cusp_clip, l_cusp_clip
-  if c <= 0 then
-    c_cusp_clip, l_cusp_clip = c, l
-  elseif l <= l_cusp then
-    -- Intersection with lower segment
-    local prop = 1 - l / l_cusp
-    c_cusp_clip = c_cusp * c / (c_cusp * prop + c)
-    l_cusp_clip = l_cusp * c_cusp_clip / c_cusp
-  else
-    -- Intersection with upper segment
-    local prop = 1 - (l - 100) / (l_cusp - 100)
-    c_cusp_clip = c_cusp * c / (c_cusp * prop + c)
-    l_cusp_clip = 100 + c_cusp_clip * (l_cusp - 100) / c_cusp
-  end
+	-- Intersection of segment between (c, l) and (0, l_cusp) with gamut boundary
+	-- Used for gamut clipping
+	local c_cusp_clip, l_cusp_clip
+	if c <= 0 then
+		c_cusp_clip, l_cusp_clip = c, l
+	elseif l <= l_cusp then
+		-- Intersection with lower segment
+		local prop = 1 - l / l_cusp
+		c_cusp_clip = c_cusp * c / (c_cusp * prop + c)
+		l_cusp_clip = l_cusp * c_cusp_clip / c_cusp
+	else
+		-- Intersection with upper segment
+		local prop = 1 - (l - 100) / (l_cusp - 100)
+		c_cusp_clip = c_cusp * c / (c_cusp * prop + c)
+		l_cusp_clip = 100 + c_cusp_clip * (l_cusp - 100) / c_cusp
+	end
 
-  return {
-    c_upper = c_upper,
-    l_cusp_clip = H.correct_lightness(l_cusp_clip),
-    c_cusp_clip = c_cusp_clip,
-  }
+	return {
+		c_upper = c_upper,
+		l_cusp_clip = H.correct_lightness(l_cusp_clip),
+		c_cusp_clip = c_cusp_clip,
+	}
 end
 
 H.clip_to_gamut = function(lch)
-  local res = vim.deepcopy(lch)
+	local res = vim.deepcopy(lch)
 
-  -- Gray is always in gamut
-  if res.h == nil then return res end
+	-- Gray is always in gamut
+	if res.h == nil then
+		return res
+	end
 
-  local gamut_points = H.get_gamut_points(lch)
+	local gamut_points = H.get_gamut_points(lch)
 
-  local is_inside_gamut = lch.c <= gamut_points.c_upper
-  if is_inside_gamut then return res end
+	local is_inside_gamut = lch.c <= gamut_points.c_upper
+	if is_inside_gamut then
+		return res
+	end
 
-  -- Clip by going towards (0, l_cusp) until in gamut
-  res.l, res.c = gamut_points.l_cusp_clip, gamut_points.c_cusp_clip
+	-- Clip by going towards (0, l_cusp) until in gamut
+	res.l, res.c = gamut_points.l_cusp_clip, gamut_points.c_cusp_clip
 
-  return res
+	return res
 end
 
 -- Auto adjusting -------------------------------------------------------------
 H.setup_autoadjust = function(palette)
-  local gr = vim.api.nvim_create_augroup('MiniHuesAdjust', {})
-  local hi = function(name, data) vim.api.nvim_set_hl(0, name, data) end
-  local adjust = function(ev)
-    local adjust_all = ev.event == 'VimEnter'
-    if adjust_all or ev.match == 'fillchars' then hi('MsgSeparator', H.attr_msgseparator(palette, true)) end
-    if adjust_all or ev.match == 'pumborder' then hi('Pmenu', H.attr_pmenu(palette, true)) end
-  end
+	local gr = vim.api.nvim_create_augroup("MiniHuesAdjust", {})
+	local hi = function(name, data)
+		vim.api.nvim_set_hl(0, name, data)
+	end
+	local adjust = function(ev)
+		local adjust_all = ev.event == "VimEnter"
+		if adjust_all or ev.match == "fillchars" then
+			hi("MsgSeparator", H.attr_msgseparator(palette, true))
+		end
+		if adjust_all or ev.match == "pumborder" then
+			hi("Pmenu", H.attr_pmenu(palette, true))
+		end
+	end
 
-  -- Use single autocommand without pattern for performance (skips Neovim doing
-  -- pattern matching on the option name). Use 'VimEnter' to work when option
-  -- is set during startup, as 'OptionSet' is not triggered.
-  local au_opts = { group = gr, callback = adjust, desc = 'Autoadjust highlight groups' }
-  vim.api.nvim_create_autocmd({ 'VimEnter', 'OptionSet' }, au_opts)
+	-- Use single autocommand without pattern for performance (skips Neovim doing
+	-- pattern matching on the option name). Use 'VimEnter' to work when option
+	-- is set during startup, as 'OptionSet' is not triggered.
+	local au_opts = { group = gr, callback = adjust, desc = "Autoadjust highlight groups" }
+	vim.api.nvim_create_autocmd({ "VimEnter", "OptionSet" }, au_opts)
 end
 
 H.attr_msgseparator = function(p, autoadjust)
-  if not autoadjust then return { fg = p.accent, bg = p.bg_mid } end
-  return vim.o.fillchars:find('msgsep:%S') ~= nil and { fg = p.accent } or { bg = p.bg_mid }
+	if not autoadjust then
+		return { fg = p.accent, bg = p.bg_mid }
+	end
+	return vim.o.fillchars:find("msgsep:%S") ~= nil and { fg = p.accent } or { bg = p.bg_mid }
 end
 
 H.attr_pmenu = function(p, autoadjust)
-  local is_pumborder = vim.fn.exists('+pumborder') == 1 and not (vim.o.pumborder == '' or vim.o.pumborder == 'none')
-  return (autoadjust and is_pumborder) and { link = 'NormalFloat' } or { fg = p.fg, bg = p.bg_mid }
+	local is_pumborder = vim.fn.exists("+pumborder") == 1 and not (vim.o.pumborder == "" or vim.o.pumborder == "none")
+	return (autoadjust and is_pumborder) and { link = "NormalFloat" } or { fg = p.fg, bg = p.bg_mid }
 end
 
 -- Utilities ------------------------------------------------------------------
-H.error = function(msg) error('(mini.hues) ' .. msg, 0) end
+H.error = function(msg)
+	error("(mini.hues) " .. msg, 0)
+end
 
 H.check_type = function(name, val, ref, allow_nil)
-  if type(val) == ref or (ref == 'callable' and vim.is_callable(val)) or (allow_nil and val == nil) then return end
-  H.error(string.format('`%s` should be %s, not %s', name, ref, type(val)))
+	if type(val) == ref or (ref == "callable" and vim.is_callable(val)) or (allow_nil and val == nil) then
+		return
+	end
+	H.error(string.format("`%s` should be %s, not %s", name, ref, type(val)))
 end
 
 H.round = function(x)
-  if x == nil then return nil end
-  return math.floor(x + 0.5)
+	if x == nil then
+		return nil
+	end
+	return math.floor(x + 0.5)
 end
 
-H.clip = function(x, from, to) return math.min(math.max(x, from), to) end
+H.clip = function(x, from, to)
+	return math.min(math.max(x, from), to)
+end
 
-H.cuberoot = function(x) return math.pow(x, 0.333333) end
+H.cuberoot = function(x)
+	return math.pow(x, 0.333333)
+end
 
 H.dist_period = function(x, y, period)
-  period = period or 360
-  local d = math.abs((x % period) - (y % period))
-  return math.min(d, period - d)
+	period = period or 360
+	local d = math.abs((x % period) - (y % period))
+	return math.min(d, period - d)
 end
 
 H.get_closest = function(x, values, dist_fun)
-  local best_val, best_key, best_dist = nil, nil, math.huge
-  for key, val in pairs(values) do
-    local cur_dist = dist_fun(x, val)
-    if cur_dist <= best_dist then
-      best_val, best_key, best_dist = val, key, cur_dist
-    end
-  end
+	local best_val, best_key, best_dist = nil, nil, math.huge
+	for key, val in pairs(values) do
+		local cur_dist = dist_fun(x, val)
+		if cur_dist <= best_dist then
+			best_val, best_key, best_dist = val, key, cur_dist
+		end
+	end
 
-  return best_val, best_key
+	return best_val, best_key
 end
 
 return MiniHues

@@ -1608,7 +1608,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration("saghen/blink.cmp") then
-    hi("BlinkCmpLabelDescription", { fg=p.bg_mid2, bg=p.bg_edge2 })
+    hi("BlinkCmpLabelDescription", { fg=p.bg_mid2, bg=p.bg_edge, italic = true })
   end
 
   -- Terminal colors

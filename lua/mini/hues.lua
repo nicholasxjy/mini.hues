@@ -576,8 +576,8 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   -- Standard syntax (affects treesitter)
   hi('Boolean',        { link='Constant' })
-  hi('Character',      { link='Constant' })
-  hi('Comment',        { fg=p.fg_mid2, bg=nil })
+  hi('Character', { link = 'Constant' })
+  hi('Comment',        { fg=p.fg_mid2, bg=nil, italic = true })
   hi('Conditional',    { link='Statement' })
   hi('Constant',       { fg=p.purple,  bg=nil })
   hi('Debug',          { link='Special' })
@@ -1125,7 +1125,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('SnacksPickerTotals',             { link='Comment' })
     hi('SnacksPickerUnselected',         { link='Comment' })
 
-    hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true, underline=true })
+    hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true })
     hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
     hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })
     hi("SnacksPickerBoxTitle", { fg = p.red, bg = p.bg, bold = true })
@@ -1573,6 +1573,10 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('MasonMuted',                       { link='Comment' })
     hi('MasonMutedBlock',                  { fg=p.bg,     bg=p.bg_mid2 })
     hi('MasonMutedBlockBold',              { fg=p.bg,     bg=p.bg_mid2, bold=true })
+  end
+
+  if has_integration("saghen/blink.cmp") then
+    hi("BlinkCmpLabelDescription", { fg=p.bg_mid2, bg=p.bg_edge2 })
   end
 
   -- Terminal colors

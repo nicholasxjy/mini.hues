@@ -155,17 +155,17 @@ local H = {}
 ---   })
 --- <
 MiniHues.setup = function(config)
-  -- TODO: Remove after Neovim=0.9 support is dropped
-  if vim.fn.has('nvim-0.10') == 0 then
-    vim.notify(
-      '(mini.hues) Neovim<0.10 is soft deprecated (module works but is not supported).'
-        .. " It will be deprecated after the next 'mini.nvim' release (module might not work)."
-        .. ' Please update your Neovim version.'
-    )
-  end
+	-- TODO: Remove after Neovim=0.9 support is dropped
+	if vim.fn.has("nvim-0.10") == 0 then
+		vim.notify(
+			"(mini.hues) Neovim<0.10 is soft deprecated (module works but is not supported)."
+				.. " It will be deprecated after the next 'mini.nvim' release (module might not work)."
+				.. " Please update your Neovim version."
+		)
+	end
 
-  -- Export module
-  _G.MiniHues = MiniHues
+	-- Export module
+	_G.MiniHues = MiniHues
 
 	-- Setup config
 	config = H.setup_config(config)
@@ -542,7 +542,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('PmenuMatch',     { fg=nil,       bg=nil,       bold=true })
   hi('PmenuMatchSel',  { fg=nil,       bg=nil,       bold=true,   blend=0, reverse=true })
   hi('PmenuSbar',      { link='Pmenu' })
-  hi('PmenuSel',       { fg=nil,       bg=nil,       blend=0,     reverse=true, bold = true })
+  hi('PmenuSel',       { fg=nil,       bg=nil,       blend=0,     reverse=true })
   hi('PmenuThumb',     { fg=nil,       bg=p.bg_mid2 })
   hi('Question',       { fg=p.azure,   bg=nil })
   hi('QuickFixLine',   { fg=nil,       bg=nil,       bold=true })
@@ -590,7 +590,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('Identifier',     { fg=p.yellow,  bg=nil })
   hi('Ignore',         { fg=nil,       bg=nil })
   hi('Include',        { link='PreProc' })
-  hi('Keyword',        { link='Statement' })
+  hi('Keyword',        { fg=p.accent, bold=true })
   hi('Label',          { link='Statement' })
   hi('Macro',          { link='PreProc' })
   hi('Number',         { link='Constant' })

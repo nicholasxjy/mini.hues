@@ -1622,7 +1622,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   if has_integration("saghen/blink.cmp") then
     hi("BlinkCmpLabelDescription", { fg=p.bg_mid2, bg=p.bg_edge })
     hi("BlinkCmpLabelDetail", { fg=p.bg_mid2, bg=nil })
-	hi("BlinkCmpMenuBorder", { link="FloatBorder" })
+	hi("BlinkCmpMenuBorder", { fg=p.accent, bg=p.bg_mid2 })
 	hi("BlinkCmpDocBorder", { link="FloatBorder" })
 	hi("BlinkCmpSignatureHelpBorder", { link="FloatBorder" })
   end

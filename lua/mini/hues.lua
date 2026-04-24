@@ -1235,10 +1235,10 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('FzfLuaTabTitle',   { link='Title' })
     hi('FzfLuaTitle',      { link='FloatTitle' })
 	hi('FzfLuaBorder',     { fg=p.bg, bg=p.bg })
-    hi('FzfLuaPreviewNormal', { link="SnacksPickerPreview" })
+    hi('FzfLuaPreviewNormal', { bg=p.bg_edge })
 	hi('FzfLuaDirPart',    { link = 'SnacksPickerDir' })
     hi('FzfLuaFzfMatch',   { link = 'SnacksPickerMatch' })
-    hi('FzfLuaCursorLine', { fg=p.bg_mid2, bg=nil, bold=true })
+    hi('FzfLuaCursorLine', { fg=nil, bg=p.bg_mid2, bold=true })
   end
 
   if has_integration('justinmk/vim-sneak') then

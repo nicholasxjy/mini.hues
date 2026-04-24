@@ -1074,7 +1074,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('SnacksPickerTotals',             { link='Comment' })
     hi('SnacksPickerUnselected',         { link='Comment' })
 
-    hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true, underline = true })
+    hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true })
     hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
     hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })
     hi("SnacksPickerBoxTitle", { fg = p.red, bg = p.bg, bold = true })
@@ -1565,6 +1565,22 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 	hi("BlinkCmpMenuBorder", { fg=p.accent, bg=p.bg_mid })
 	hi("BlinkCmpDocBorder", { link="FloatBorder" })
 	hi("BlinkCmpSignatureHelpBorder", { link="FloatBorder" })
+
+    hi('BlinkPairsBlue',   { fg=p.azure,  bg=nil })
+    hi('BlinkPairsCyan',   { fg=p.cyan,   bg=nil })
+    hi('BlinkPairsGreen',  { fg=p.green,  bg=nil })
+    hi('BlinkPairsOrange', { fg=p.orange, bg=nil })
+    hi('BlinkPairsRed',    { fg=p.red,    bg=nil })
+    hi('BlinkPairsViolet', { fg=p.purple, bg=nil })
+    hi('BlinkPairsYellow', { fg=p.yellow, bg=nil })
+
+	hi('BlinkIndentBlue',   { fg=p.azure,  bg=nil })
+    hi('BlinkIndentCyan',   { fg=p.cyan,   bg=nil })
+    hi('BlinkIndentGreen',  { fg=p.green,  bg=nil })
+    hi('BlinkIndentOrange', { fg=p.orange, bg=nil })
+    hi('BlinkIndentRed',    { fg=p.red,    bg=nil })
+    hi('BlinkIndentViolet', { fg=p.purple, bg=nil })
+    hi('BlinkIndentYellow', { fg=p.yellow, bg=nil })
   end
 
   -- Terminal colors

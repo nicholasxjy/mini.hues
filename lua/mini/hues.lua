@@ -1236,7 +1236,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('FzfLuaTitle',      { link='FloatTitle' })
 	hi('FzfLuaBorder',     { fg=p.accent, bg=p.bg })
 	hi('FzfLuaDirPart',    { link = 'SnacksPickerDir' })
-    hi('FzfLuaFzfMatch',   { link = 'SnacksPickerMatch' }
+    hi('FzfLuaFzfMatch',   { link = 'SnacksPickerMatch' })
   end
 
   if has_integration('justinmk/vim-sneak') then

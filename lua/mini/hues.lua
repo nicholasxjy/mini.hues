@@ -973,7 +973,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('MiniFilesCursorLine',     { link='CursorLine' })
     hi('MiniFilesDirectory',      { link='Directory'   })
     hi('MiniFilesFile',           { fg=p.fg, bg=nil })
-    hi('MiniFilesNormal',         { link='NormalFloat' })
+    hi('MiniFilesNormal',         { bg=p.bg })
     hi('MiniFilesTitle',          { link='FloatTitle'  })
     hi('MiniFilesTitleFocused',   { fg=p.fg, bg=p.bg_edge, bold=true })
 
@@ -1136,18 +1136,19 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('SnacksPickerUnselected',         { link='Comment' })
 
     hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true })
+    hi("SnacksPickerTitle", { fg = p.yellow, bg = p.bg, bold = true })
     hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
     hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })
     hi("SnacksPickerBoxTitle", { fg = p.red, bg = p.bg, bold = true })
-	hi("SnacksPickerListTitle", { fg = p.green, bg = p.bg, bold = true })
+	  hi("SnacksPickerListTitle", { fg = p.green, bg = p.bg, bold = true })
 
     hi("SnacksPickerPreviewBorder", { fg = p.bg_edge, bg = p.bg_edge })
     hi("SnacksPickerListBorder", { fg = p.bg_edge, bg = p.bg_edge })
     hi("SnacksPickerBoxBorder", { fg = p.bg_edge, bg = p.bg_edge })
     hi("SnacksPickerInputBorder", { fg = p.bg_edge, bg = p.bg_edge })
     hi("SnacksPickerInput", { fg=p.accent, bg=p.bg_edge, bold=true })
-	hi("SnacksPickerInputPrompt", { fg=p.accent, bg=p.bg, bold=true })
-	hi("SnacksPickerPreview", { bg=p.bg })
+	  hi("SnacksPickerInputPrompt", { fg=p.accent, bg=p.bg, bold=true })
+	  hi("SnacksPickerPreview", { bg=p.bg })
 
   end
 
@@ -1173,7 +1174,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   -- Everything works correctly out of the box
 
   if has_integration('folke/which-key.nvim') then
-    hi('WhichKey',          { fg=p.cyan,  bg=nil })
+    hi('WhichKey',          { fg=p.cyan,  bg=p.bg })
     hi('WhichKeyBorder',    { link='FloatBorder' })
     hi('WhichKeyDesc',      { fg=p.fg,    bg=nil })
     hi('WhichKeyFloat',     { fg=p.fg,    bg=p.bg_edge })
@@ -1238,13 +1239,13 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration('HiPhish/rainbow-delimiters.nvim') then
-    hi('RainbowDelimiterBlue',   { fg=p.azure,  bg=nil })
+    hi('RainbowDelimiterRed',    { fg=p.red,    bg=nil })
     hi('RainbowDelimiterCyan',   { fg=p.cyan,   bg=nil })
+    hi('RainbowDelimiterYellow', { fg=p.yellow, bg=nil })
     hi('RainbowDelimiterGreen',  { fg=p.green,  bg=nil })
     hi('RainbowDelimiterOrange', { fg=p.orange, bg=nil })
-    hi('RainbowDelimiterRed',    { fg=p.red,    bg=nil })
     hi('RainbowDelimiterViolet', { fg=p.purple, bg=nil })
-    hi('RainbowDelimiterYellow', { fg=p.yellow, bg=nil })
+    hi('RainbowDelimiterBlue',   { fg=p.azure,  bg=nil })
   end
 
   if has_integration('hrsh7th/nvim-cmp') then

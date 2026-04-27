@@ -905,7 +905,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('MiniFilesCursorLine',     { link='CursorLine' })
     hi('MiniFilesDirectory',      { link='Directory'   })
     hi('MiniFilesFile',           { fg=p.fg, bg=nil })
-    hi('MiniFilesNormal',         { bg=p.bg })
+    hi('MiniFilesNormal',         { link='NormalFloat' })
     hi('MiniFilesTitle',          { link='FloatTitle'  })
     hi('MiniFilesTitleFocused',   { fg=p.fg, bg=p.bg_edge, bold=true })
 

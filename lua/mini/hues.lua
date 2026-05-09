@@ -677,7 +677,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('DiagnosticSignHint',  { link='DiagnosticHint' })
   hi('DiagnosticSignOk',    { link='DiagnosticOk' })
 
-  hi('DiagnosticDeprecated',  { fg=nil, bg=nil, sp=p.red, strikethrough=true })
+  hi('DiagnosticDeprecated',  { fg=nil, bg=nil, sp=p.red, strikethrough=true, underline=true })
   hi('DiagnosticUnnecessary', { link='Comment' })
 
   -- Built-in LSP
@@ -788,7 +788,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.typeParameter', { link='@type.definition' })
   hi('@lsp.type.variable',      { link='@variable' })
 
-  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil })
+  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil, underline=true })
 
   -- New tree-sitter groups
   if vim.fn.has('nvim-0.10') == 1 then

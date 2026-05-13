@@ -55,6 +55,7 @@
 ---     - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
 ---     - [lukas-reineke/indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)
 ---     - [MeanderingProgrammer/render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)
+---     - [mvllow/modes.nvim](https://github.com/mvllow/modes.nvim)
 ---     - [neoclide/coc.nvim](https://github.com/neoclide/coc.nvim)
 ---     - [NeogitOrg/neogit](https://github.com/NeogitOrg/neogit)
 ---     - [nvim-lualine/lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
@@ -1360,6 +1361,17 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('RenderMarkdownH6Bg',       { fg=nil,      bg=p.blue_bg })
     hi('RenderMarkdownTodo',       { link='Todo' })
     hi('RenderMarkdownUnchecked',  { link='DiagnosticWarn' })
+  end
+
+  if has_integration('mvllow/modes.nvim') then
+    hi('ModesCopy',    { fg=nil, bg=p.yellow_bg })
+    hi('ModesDelete',  { fg=nil, bg=p.red_bg })
+    hi('ModesChange',  { link='ModesDelete' })
+    hi('ModesFormat',  { fg=nil, bg=p.orange_bg })
+    hi('ModesInsert',  { fg=nil, bg=p.cyan_bg })
+    hi('ModesReplace', { fg=nil, bg=p.bg_mid })
+    hi('ModesVisual',  { fg=nil, bg=p.purple_bg })
+    hi('ModesSelect',  { link='ModesVisual' })
   end
 
   if has_integration('neoclide/coc.nvim') then

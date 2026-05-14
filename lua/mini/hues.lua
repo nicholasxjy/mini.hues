@@ -789,7 +789,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.typeParameter', { link='@type.definition' })
   hi('@lsp.type.variable',      { link='@variable' })
 
-  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil })
+  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil, strikethrough=true })
 
   -- New tree-sitter groups
   if vim.fn.has('nvim-0.10') == 1 then
@@ -1602,6 +1602,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 	hi("BlinkCmpMenuBorder", { fg=p.accent, bg=p.bg_mid })
 	hi("BlinkCmpDocBorder", { link="FloatBorder" })
 	hi("BlinkCmpSignatureHelpBorder", { link="FloatBorder" })
+	hi("BlinkCmpLabelDeprecated", {fg=p.fg_mid2, bg=nil, strikethrough=true})
 
     hi('BlinkPairsBlue',   { fg=p.azure,  bg=nil })
     hi('BlinkPairsCyan',   { fg=p.cyan,   bg=nil })

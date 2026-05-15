@@ -11,7 +11,7 @@ Features:
   See |MiniHues.config| for setup inspiration.
 
 - Configurable:
-    - Number of hues used for non-base colors (from 0 to 8).
+    - Number of hues used for non-base colors (from 0 to 12).
     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
     - Accent color used for some selected UI elements.
     - Plugin integration (can be selectively enabled for faster startup).

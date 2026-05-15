@@ -9,7 +9,7 @@
 ---   See |MiniHues.config| for setup inspiration.
 ---
 --- - Configurable:
----     - Number of hues used for non-base colors (from 0 to 8).
+---     - Number of hues used for non-base colors (from 0 to 12).
 ---     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
 ---     - Accent color used for some selected UI elements.
 ---     - Plugin integration (can be selectively enabled for faster startup).
@@ -1897,10 +1897,10 @@ H.validate_hex = function(x, name)
 end
 
 H.validate_n_hues = function(x)
-	if type(x) == "number" and 0 <= x and x <= 8 then
+	if type(x) == "number" and 0 <= x and x <= 12 then
 		return x
 	end
-	local msg = string.format("`n_hues` should be a number between 0 and 8", name)
+	local msg = string.format("`n_hues` should be a number between 0 and 12", name)
 	H.error(msg)
 end
 

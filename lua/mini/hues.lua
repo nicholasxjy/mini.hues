@@ -9,7 +9,7 @@
 ---   See |MiniHues.config| for setup inspiration.
 ---
 --- - Configurable:
----     - Number of hues used for non-base colors (from 0 to 8).
+---     - Number of hues used for non-base colors (from 0 to 12).
 ---     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
 ---     - Accent color used for some selected UI elements.
 ---     - Plugin integration (can be selectively enabled for faster startup).
@@ -261,8 +261,8 @@ MiniHues.config = {
 	-- Saturation. One of 'low', 'lowmedium', 'medium', 'mediumhigh', 'high'.
 	saturation = "medium",
 
-	-- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'green',
-	-- 'cyan', 'azure', 'blue', 'purple'
+	-- Accent color. One of: 'bg', 'fg', 'red', 'rose', 'orange', 'yellow',
+	-- 'lime', 'green', 'cyan', 'teal', 'azure', 'blue', 'violet', 'purple'
 	accent = "bg",
 
 	-- Plugin integrations. Use `default = false` to disable all integrations.
@@ -315,7 +315,7 @@ MiniHues.config = {
 ---       the output grid will be `{ 90, 270 }`.
 ---
 ---     - For each hue of reference color (which itself is an equidistant grid
----       of 8 hues) compute the closest value from the grid. This allows
+---       of 12 hues) compute the closest value from the grid. This allows
 ---       operating in same terms (like "red", "green") despite maybe actually
 ---       having less different hues.
 ---
@@ -397,11 +397,17 @@ MiniHues.make_palette = function(config)
     red       = H.oklch2hex({ l = fg_l, c = chroma, h = hues.red }),
     red_bg    = H.oklch2hex({ l = bg_l, c = chroma, h = hues.red }),
 
+    rose      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.rose }),
+    rose_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.rose }),
+
     orange    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.orange }),
     orange_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.orange }),
 
     yellow    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.yellow }),
     yellow_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.yellow }),
+
+    lime      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.lime }),
+    lime_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.lime }),
 
     green     = H.oklch2hex({ l = fg_l, c = chroma, h = hues.green }),
     green_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues.green }),
@@ -409,11 +415,17 @@ MiniHues.make_palette = function(config)
     cyan      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.cyan }),
     cyan_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.cyan }),
 
+    teal      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.teal }),
+    teal_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.teal }),
+
     azure     = H.oklch2hex({ l = fg_l, c = chroma, h = hues.azure }),
     azure_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues.azure }),
 
     blue      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.blue }),
     blue_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.blue }),
+
+    violet    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.violet }),
+    violet_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.violet }),
 
     purple    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.purple }),
     purple_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.purple }),
@@ -600,7 +612,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('PreProc',        { fg=p.blue,    bg=nil })
   hi('Repeat',         { link='Statement' })
   hi('Special',        { fg=p.cyan,    bg=nil })
-  hi('SpecialChar',    { link='Special' })
+  hi('SpecialChar',    { fg=p.lime,    bg=nil })
   hi('SpecialComment', { link='Special' })
   hi('Statement',      { fg=p.fg,      bg=nil,         bold=true })
   hi('StorageClass',   { link='Type' })
@@ -744,8 +756,8 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@parameter',        { fg=p.blue, bg=nil })
   hi('@method',           { link='Function' })
   hi('@method.call',      { link='Function' })
-  hi('@field',            { link='Identifier' })
-  hi('@property',         { link='Identifier' })
+  hi('@field',            { fg=p.lime, bg=nil })
+  hi('@property',         { fg=p.lime, bg=nil })
   hi('@constructor',      { link='Special' })
 
   hi('@conditional',    { link='Conditional' })
@@ -763,7 +775,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@type.definition',  { link='Typedef' })
   hi('@storageclass',     { link='StorageClass' })
   hi('@structure',        { link='Structure' })
-  hi('@namespace',        { link='Identifier' })
+  hi('@namespace',        { fg=p.teal, bg=nil })
   hi('@include',          { link='Include' })
   hi('@preproc',          { link='PreProc' })
   hi('@debug',            { link='Debug' })
@@ -783,12 +795,12 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.event',              { link='@type' })
   hi('@lsp.type.function',           { link='@function' })
   hi('@lsp.type.generic',            { link='@type' })
-  hi('@lsp.type.interface',          { link='@type' })
+  hi('@lsp.type.interface',          { fg=p.violet, bg=nil })
   hi('@lsp.type.keyword',            { link='@keyword' })
   hi('@lsp.type.macro',              { link='@macro' })
   hi('@lsp.type.method',             { link='@method' })
   hi('@lsp.type.modifier',           { link='@storageclass' })
-  hi('@lsp.type.namespace',          { link='@namespace' })
+  hi('@lsp.type.namespace',          { fg=p.teal,   bg=nil })
   hi('@lsp.type.number',             { link='@number' })
   hi('@lsp.type.operator',           { link='@operator' })
   hi('@lsp.type.parameter',          { link='@parameter' })
@@ -799,7 +811,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.struct',             { link='@structure' })
   hi('@lsp.type.type',               { link='@type' })
   hi('@lsp.type.typeAlias',          { link='@type.definition' })
-  hi('@lsp.type.typeParameter',      { link='@type.definition' })
+  hi('@lsp.type.typeParameter',      { fg=p.rose,   bg=nil })
   hi('@lsp.type.unresolvedReference', { link='@variable' })
   hi('@lsp.type.variable',           { link='@variable' })
 
@@ -823,14 +835,14 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     -- @variable
     -- @variable.builtin
     hi('@variable.parameter', { link='@parameter' })
-    hi('@variable.member',    { link='@field' })
+    hi('@variable.member',    { fg=p.lime, bg=nil })
 
     -- @constant
     -- @constant.builtin
     -- @constant.macro
 
-    hi('@module',         { link='@namespace' })
-    hi('@module.builtin', { link='@variable.builtin' })
+    hi('@module',         { fg=p.teal, bg=nil })
+    hi('@module.builtin', { link='Special' })
     -- @label
 
     -- @string
@@ -877,7 +889,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('@keyword.storage',   { fg=p.fg,   bg=nil, bold=true })
     hi('@keyword.repeat',    { link='@keyword' })
     -- @keyword.return
-    hi('@keyword.debug',     { fg=p.cyan, bg=nil, bold=true })
+    hi('@keyword.debug',     { fg=p.rose, bg=nil, bold=true })
     hi('@keyword.exception', { link='@keyword' })
 
     hi('@keyword.conditional',         { link='@keyword' })
@@ -906,10 +918,10 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('@markup.heading',   { link='@text.title' })
     hi('@markup.heading.1', { fg=p.orange, bg=nil })
     hi('@markup.heading.2', { fg=p.yellow, bg=nil })
-    hi('@markup.heading.3', { fg=p.green,  bg=nil })
-    hi('@markup.heading.4', { fg=p.cyan,   bg=nil })
+    hi('@markup.heading.3', { fg=p.lime,   bg=nil })
+    hi('@markup.heading.4', { fg=p.teal,   bg=nil })
     hi('@markup.heading.5', { fg=p.azure,  bg=nil })
-    hi('@markup.heading.6', { fg=p.blue,   bg=nil })
+    hi('@markup.heading.6', { fg=p.violet, bg=nil })
 
     hi('@markup.heading.1.delimiter.vimdoc', { fg=p.bg_mid2, bg=nil, bold=true })
     hi('@markup.heading.2.delimiter.vimdoc', { fg=p.bg_mid2, bg=nil, bold=true })
@@ -1115,7 +1127,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('HydraRed',      { fg=p.red,    bg=nil })
     hi('HydraBlue',     { fg=p.azure,  bg=nil })
     hi('HydraAmaranth', { fg=p.purple, bg=nil })
-    hi('HydraTeal',     { fg=p.cyan,   bg=nil })
+    hi('HydraTeal',     { fg=p.teal,   bg=nil })
     hi('HydraPink',     { fg=p.orange, bg=nil })
     hi('HydraHint',     { link='NormalFloat' })
   end
@@ -1257,7 +1269,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('RainbowDelimiterYellow', { fg=p.yellow, bg=nil })
     hi('RainbowDelimiterGreen',  { fg=p.green,  bg=nil })
     hi('RainbowDelimiterOrange', { fg=p.orange, bg=nil })
-    hi('RainbowDelimiterViolet', { fg=p.purple, bg=nil })
+    hi('RainbowDelimiterViolet', { fg=p.violet, bg=nil })
     hi('RainbowDelimiterBlue',   { fg=p.azure,  bg=nil })
   end
 
@@ -1361,6 +1373,10 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('IndentBlanklineIndent6',      { fg=p.green,   bg=nil, nocombine=true })
     hi('IndentBlanklineIndent7',      { fg=p.orange,  bg=nil, nocombine=true })
     hi('IndentBlanklineIndent8',      { fg=p.purple,  bg=nil, nocombine=true })
+    hi('IndentBlanklineIndent9',      { fg=p.rose,    bg=nil, nocombine=true })
+    hi('IndentBlanklineIndent10',     { fg=p.lime,    bg=nil, nocombine=true })
+    hi('IndentBlanklineIndent11',     { fg=p.teal,    bg=nil, nocombine=true })
+    hi('IndentBlanklineIndent12',     { fg=p.violet,  bg=nil, nocombine=true })
   end
 
   if has_integration('MeanderingProgrammer/render-markdown.nvim') then
@@ -1373,14 +1389,14 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('RenderMarkdownH1Bg',       { fg=nil,      bg=p.orange_bg })
     hi('RenderMarkdownH2',         { fg=p.yellow, bg=nil })
     hi('RenderMarkdownH2Bg',       { fg=nil,      bg=p.yellow_bg })
-    hi('RenderMarkdownH3',         { fg=p.green,  bg=nil })
-    hi('RenderMarkdownH3Bg',       { fg=nil,      bg=p.green_bg })
-    hi('RenderMarkdownH4',         { fg=p.cyan,   bg=nil })
-    hi('RenderMarkdownH4Bg',       { fg=nil,      bg=p.cyan_bg })
+    hi('RenderMarkdownH3',         { fg=p.lime,   bg=nil })
+    hi('RenderMarkdownH3Bg',       { fg=nil,      bg=p.lime_bg })
+    hi('RenderMarkdownH4',         { fg=p.teal,   bg=nil })
+    hi('RenderMarkdownH4Bg',       { fg=nil,      bg=p.teal_bg })
     hi('RenderMarkdownH5',         { fg=p.azure,  bg=nil })
     hi('RenderMarkdownH5Bg',       { fg=nil,      bg=p.azure_bg })
-    hi('RenderMarkdownH6',         { fg=p.blue,   bg=nil })
-    hi('RenderMarkdownH6Bg',       { fg=nil,      bg=p.blue_bg })
+    hi('RenderMarkdownH6',         { fg=p.violet, bg=nil })
+    hi('RenderMarkdownH6Bg',       { fg=nil,      bg=p.violet_bg })
     hi('RenderMarkdownTodo',       { link='Todo' })
     hi('RenderMarkdownUnchecked',  { link='DiagnosticWarn' })
   end
@@ -1517,6 +1533,22 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('MarkviewPalette7Fg',   { fg=p.blue,   bg=nil })
     hi('MarkviewPalette7Bg',   { fg=nil,      bg=p.blue_bg })
     hi('MarkviewPalette7Sign', { fg=p.blue,   bg=nil })
+    hi('MarkviewPalette8',     { fg=p.rose,   bg=p.rose_bg })
+    hi('MarkviewPalette8Fg',   { fg=p.rose,   bg=nil })
+    hi('MarkviewPalette8Bg',   { fg=nil,      bg=p.rose_bg })
+    hi('MarkviewPalette8Sign', { fg=p.rose,   bg=nil })
+    hi('MarkviewPalette9',     { fg=p.lime,   bg=p.lime_bg })
+    hi('MarkviewPalette9Fg',   { fg=p.lime,   bg=nil })
+    hi('MarkviewPalette9Bg',   { fg=nil,      bg=p.lime_bg })
+    hi('MarkviewPalette9Sign', { fg=p.lime,   bg=nil })
+    hi('MarkviewPalette10',     { fg=p.teal,   bg=p.teal_bg })
+    hi('MarkviewPalette10Fg',   { fg=p.teal,   bg=nil })
+    hi('MarkviewPalette10Bg',   { fg=nil,      bg=p.teal_bg })
+    hi('MarkviewPalette10Sign', { fg=p.teal,   bg=nil })
+    hi('MarkviewPalette11',     { fg=p.violet, bg=p.violet_bg })
+    hi('MarkviewPalette11Fg',   { fg=p.violet, bg=nil })
+    hi('MarkviewPalette11Bg',   { fg=nil,      bg=p.violet_bg })
+    hi('MarkviewPalette11Sign', { fg=p.violet, bg=nil })
   end
 
   if has_integration('phaazon/hop.nvim') then
@@ -1631,7 +1663,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('BlinkPairsGreen',  { fg=p.green,  bg=nil })
     hi('BlinkPairsOrange', { fg=p.orange, bg=nil })
     hi('BlinkPairsRed',    { fg=p.red,    bg=nil })
-    hi('BlinkPairsViolet', { fg=p.purple, bg=nil })
+    hi('BlinkPairsViolet', { fg=p.violet, bg=nil })
     hi('BlinkPairsYellow', { fg=p.yellow, bg=nil })
 
 	hi('BlinkIndentBlue',   { fg=p.azure,  bg=nil })
@@ -1639,7 +1671,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('BlinkIndentGreen',  { fg=p.green,  bg=nil })
     hi('BlinkIndentOrange', { fg=p.orange, bg=nil })
     hi('BlinkIndentRed',    { fg=p.red,    bg=nil })
-    hi('BlinkIndentViolet', { fg=p.purple, bg=nil })
+    hi('BlinkIndentViolet', { fg=p.violet, bg=nil })
     hi('BlinkIndentYellow', { fg=p.yellow, bg=nil })
   end
 
@@ -1737,7 +1769,7 @@ H.tau = 2 * math.pi
 
 H.saturation_values = { "low", "lowmedium", "medium", "mediumhigh", "high" }
 
-H.accent_values = { "bg", "fg", "red", "orange", "yellow", "green", "cyan", "azure", "blue", "purple" }
+H.accent_values = { "bg", "fg", "red", "rose", "orange", "yellow", "lime", "green", "cyan", "teal", "azure", "blue", "violet", "purple" }
 
 -- Cusps for Oklch color space. See 'mini.colors' for more details.
 --stylua: ignore start
@@ -1866,7 +1898,7 @@ H.make_hues = function(bg_h, fg_h, n_hues)
 		table.insert(grid, i * period + d)
 	end
 
-	-- Normalize equidistant grid to be base 8 colors
+	-- Normalize equidistant grid to be base 12 colors
 	local dist_fun = function(x, y)
 		return H.dist_period(x, y, 360)
 	end
@@ -1876,12 +1908,16 @@ H.make_hues = function(bg_h, fg_h, n_hues)
 
   --stylua: ignore start
   res.red    = approx(0)
+  res.rose   = approx(22.5)
   res.orange = approx(45)
   res.yellow = approx(90)
+  res.lime   = approx(112.5)
   res.green  = approx(135)
   res.cyan   = approx(180)
+  res.teal   = approx(202.5)
   res.azure  = approx(225)
   res.blue   = approx(270)
+  res.violet = approx(292.5)
   res.purple = approx(315)
 	--stylua: ignore end
 
@@ -1897,10 +1933,10 @@ H.validate_hex = function(x, name)
 end
 
 H.validate_n_hues = function(x)
-	if type(x) == "number" and 0 <= x and x <= 8 then
+	if type(x) == "number" and 0 <= x and x <= 12 then
 		return x
 	end
-	local msg = string.format("`n_hues` should be a number between 0 and 8", name)
+	local msg = string.format("`n_hues` should be a number between 0 and 12", name)
 	H.error(msg)
 end
 

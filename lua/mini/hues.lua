@@ -261,8 +261,8 @@ MiniHues.config = {
 	-- Saturation. One of 'low', 'lowmedium', 'medium', 'mediumhigh', 'high'.
 	saturation = "medium",
 
-	-- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'green',
-	-- 'cyan', 'azure', 'blue', 'purple'
+	-- Accent color. One of: 'bg', 'fg', 'red', 'rose', 'orange', 'yellow',
+	-- 'lime', 'green', 'cyan', 'teal', 'azure', 'blue', 'violet', 'purple'
 	accent = "bg",
 
 	-- Plugin integrations. Use `default = false` to disable all integrations.
@@ -315,7 +315,7 @@ MiniHues.config = {
 ---       the output grid will be `{ 90, 270 }`.
 ---
 ---     - For each hue of reference color (which itself is an equidistant grid
----       of 8 hues) compute the closest value from the grid. This allows
+---       of 12 hues) compute the closest value from the grid. This allows
 ---       operating in same terms (like "red", "green") despite maybe actually
 ---       having less different hues.
 ---
@@ -397,11 +397,17 @@ MiniHues.make_palette = function(config)
     red       = H.oklch2hex({ l = fg_l, c = chroma, h = hues.red }),
     red_bg    = H.oklch2hex({ l = bg_l, c = chroma, h = hues.red }),
 
+    rose      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.rose }),
+    rose_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.rose }),
+
     orange    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.orange }),
     orange_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.orange }),
 
     yellow    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.yellow }),
     yellow_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.yellow }),
+
+    lime      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.lime }),
+    lime_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.lime }),
 
     green     = H.oklch2hex({ l = fg_l, c = chroma, h = hues.green }),
     green_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues.green }),
@@ -409,11 +415,17 @@ MiniHues.make_palette = function(config)
     cyan      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.cyan }),
     cyan_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.cyan }),
 
+    teal      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.teal }),
+    teal_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.teal }),
+
     azure     = H.oklch2hex({ l = fg_l, c = chroma, h = hues.azure }),
     azure_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues.azure }),
 
     blue      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.blue }),
     blue_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.blue }),
+
+    violet    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.violet }),
+    violet_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.violet }),
 
     purple    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.purple }),
     purple_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.purple }),
@@ -906,10 +918,10 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('@markup.heading',   { link='@text.title' })
     hi('@markup.heading.1', { fg=p.orange, bg=nil })
     hi('@markup.heading.2', { fg=p.yellow, bg=nil })
-    hi('@markup.heading.3', { fg=p.green,  bg=nil })
-    hi('@markup.heading.4', { fg=p.cyan,   bg=nil })
+    hi('@markup.heading.3', { fg=p.lime,   bg=nil })
+    hi('@markup.heading.4', { fg=p.teal,   bg=nil })
     hi('@markup.heading.5', { fg=p.azure,  bg=nil })
-    hi('@markup.heading.6', { fg=p.blue,   bg=nil })
+    hi('@markup.heading.6', { fg=p.violet, bg=nil })
 
     hi('@markup.heading.1.delimiter.vimdoc', { fg=p.bg_mid2, bg=nil, bold=true })
     hi('@markup.heading.2.delimiter.vimdoc', { fg=p.bg_mid2, bg=nil, bold=true })
@@ -1737,7 +1749,7 @@ H.tau = 2 * math.pi
 
 H.saturation_values = { "low", "lowmedium", "medium", "mediumhigh", "high" }
 
-H.accent_values = { "bg", "fg", "red", "orange", "yellow", "green", "cyan", "azure", "blue", "purple" }
+H.accent_values = { "bg", "fg", "red", "rose", "orange", "yellow", "lime", "green", "cyan", "teal", "azure", "blue", "violet", "purple" }
 
 -- Cusps for Oklch color space. See 'mini.colors' for more details.
 --stylua: ignore start
@@ -1866,7 +1878,7 @@ H.make_hues = function(bg_h, fg_h, n_hues)
 		table.insert(grid, i * period + d)
 	end
 
-	-- Normalize equidistant grid to be base 8 colors
+	-- Normalize equidistant grid to be base 12 colors
 	local dist_fun = function(x, y)
 		return H.dist_period(x, y, 360)
 	end
@@ -1876,12 +1888,16 @@ H.make_hues = function(bg_h, fg_h, n_hues)
 
   --stylua: ignore start
   res.red    = approx(0)
+  res.rose   = approx(22.5)
   res.orange = approx(45)
   res.yellow = approx(90)
+  res.lime   = approx(112.5)
   res.green  = approx(135)
   res.cyan   = approx(180)
+  res.teal   = approx(202.5)
   res.azure  = approx(225)
   res.blue   = approx(270)
+  res.violet = approx(292.5)
   res.purple = approx(315)
 	--stylua: ignore end
 

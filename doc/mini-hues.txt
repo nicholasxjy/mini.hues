@@ -11,7 +11,7 @@ Features:
   See |MiniHues.config| for setup inspiration.
 
 - Configurable:
-    - Number of hues used for non-base colors (from 0 to 8).
+    - Number of hues used for non-base colors (from 0 to 12).
     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
     - Accent color used for some selected UI elements.
     - Plugin integration (can be selectively enabled for faster startup).
@@ -164,13 +164,13 @@ Defaults ~
     foreground = nil,
 
     -- Number of hues used for non-base colors
-    n_hues = 8,
+    n_hues = 12,
 
     -- Saturation. One of 'low', 'lowmedium', 'medium', 'mediumhigh', 'high'.
     saturation = 'medium',
 
-    -- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'green',
-    -- 'cyan', 'azure', 'blue', 'purple'
+    -- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'lime',
+    -- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink'
     accent = 'bg',
 
     -- Plugin integrations. Use `default = false` to disable all integrations.
@@ -235,6 +235,7 @@ only one `setup` call): >lua
   setup({ background = '#281e2c', foreground = '#c9c5cb' }) -- purple
 
   -- Choose number of accent colors
+  setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 12 })
   setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 6 })
   setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 4 })
   setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 2 })
@@ -297,8 +298,8 @@ https://bottosson.github.io/posts/oklab/.
       Example: for background hue 0, foreground hue 180, and `config.n_hues` 2
       the output grid will be `{ 90, 270 }`.
 
-    - For each hue of reference color (which itself is an equidistant grid
-      of 8 hues) compute the closest value from the grid. This allows
+    - For each named reference color (from a 12-color wheel) compute the
+      closest value from the grid. This allows
       operating in same terms (like "red", "green") despite maybe actually
       having less different hues.
 
@@ -328,8 +329,9 @@ Return ~
   - Fields like <bg_xxx> and <fg_xxx> are essentially <bg> and <fg> but with
     different lightness values: `_edge`/`_edge2` - closer to edge lightness,
     `_mid`/`_mid2` - closer to middle lightness.
-  - Fields for non-base colors (<red>, <orange>, <yellow>, <green>, <cyan>,
-    <azure>, <blue>, <purple>) have the same lightness as foreground.
+  - Fields for non-base colors (<red>, <orange>, <yellow>, <lime>,
+    <green>, <teal>, <cyan>, <azure>, <blue>, <indigo>, <purple>,
+    <pink>) have the same lightness as foreground.
   - Fields for non-base colors with <_bg> suffix have the same lightness as
     background.
   - <accent> and <accent_bg> represent accent colors with foreground and

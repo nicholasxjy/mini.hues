@@ -80,6 +80,7 @@ require('mini.hues').setup({ background = '#19213a', foreground = '#c4c6cd' }) -
 require('mini.hues').setup({ background = '#2b1a33', foreground = '#c9c5cb' }) -- purple
 
 -- Different number of non-base hues
+require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', n_hues = 12 })
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', n_hues = 6 })
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', n_hues = 4 })
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', n_hues = 2 })
@@ -102,7 +103,7 @@ require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', acc
 - Required to set two base colors: background and foreground. Their shades and other non-base colors are computed to be as much perceptually different as reasonably possible.
 
 - Configurable:
-    - Number of hues used for non-base colors (from 0 to 8).
+    - Number of hues used for non-base colors (from 0 to 12).
     - Saturation level ('low', 'lowmedium', 'medium', 'mediumhigh', 'high').
     - Accent color used for some selected UI elements.
     - Plugin integration (can be selectively enabled for faster startup).
@@ -262,13 +263,13 @@ Stable branch:
   foreground = nil,
 
   -- Number of hues used for non-base colors
-  n_hues = 8,
+  n_hues = 12,
 
   -- Saturation. One of 'low', 'lowmedium', 'medium', 'mediumhigh', 'high'.
   saturation = 'medium',
 
-  -- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'green',
-  -- 'cyan', 'azure', 'blue', 'purple'
+  -- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'lime',
+  -- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink'
   accent = 'bg',
 
   -- Plugin integrations. Use `default = false` to disable all integrations.

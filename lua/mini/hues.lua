@@ -1514,9 +1514,32 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('BufferVisibleTarget',  { fg=p.fg,     bg=p.bg_mid2, bold=true })
   end
 
-  if has_integration('saghen/blink.cmp') then
-    hi('BlinkCmpLabelDeprecated', { link='Comment' })
-    hi('BlinkCmpLabelMatch',      { fg=nil,  bg=nil, bold=true })
+  -- stevearc/aerial.nvim
+  -- Everything works correctly out of the box
+
+  if has_integration('williamboman/mason.nvim') then
+    hi('MasonError',                       { fg=p.red,    bg=nil })
+    hi('MasonHeader',                      { fg=p.bg,     bg=p.azure,   bold=true })
+    hi('MasonHeaderSecondary',             { fg=p.bg,     bg=p.blue,    bold=true })
+    hi('MasonHeading',                     { link='Bold' })
+    hi('MasonHighlight',                   { fg=p.accent, bg=nil })
+    hi('MasonHighlightBlock',              { fg=p.bg,     bg=p.accent })
+    hi('MasonHighlightBlockBold',          { link='MasonHeaderSecondary' })
+    hi('MasonHighlightBlockBoldSecondary', { link='MasonHeader' })
+    hi('MasonHighlightBlockSecondary',     { fg=p.bg,     bg=p.azure })
+    hi('MasonHighlightSecondary',          { fg=p.azure,  bg=nil })
+    hi('MasonLink',                        { link='MasonHighlight' })
+    hi('MasonMuted',                       { link='Comment' })
+    hi('MasonMutedBlock',                  { fg=p.bg,     bg=p.bg_mid2 })
+    hi('MasonMutedBlockBold',              { fg=p.bg,     bg=p.bg_mid2, bold=true })
+  end
+
+  if has_integration("saghen/blink.cmp") then
+    hi("BlinkCmpLabelDescription", { fg=p.bg_mid2, bg=p.bg_edge })
+    hi("BlinkCmpLabelDetail", { fg=p.bg_mid2, bg=nil })
+    hi("BlinkCmpMenuBorder", { fg=p.accent, bg=p.bg_mid })
+    hi("BlinkCmpDocBorder", { link="FloatBorder" })
+    hi("BlinkCmpSignatureHelpBorder", { link="FloatBorder" })
 
     hi('BlinkCmpKindClass',         { link='Type' })
     hi('BlinkCmpKindColor',         { link='Special' })
@@ -1543,35 +1566,6 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('BlinkCmpKindUnit',          { link='Special' })
     hi('BlinkCmpKindValue',         { link='Identifier' })
     hi('BlinkCmpKindVariable',      { link='Delimiter' })
-  end
-
-  -- stevearc/aerial.nvim
-  -- Everything works correctly out of the box
-
-  if has_integration('williamboman/mason.nvim') then
-    hi('MasonError',                       { fg=p.red,    bg=nil })
-    hi('MasonHeader',                      { fg=p.bg,     bg=p.azure,   bold=true })
-    hi('MasonHeaderSecondary',             { fg=p.bg,     bg=p.blue,    bold=true })
-    hi('MasonHeading',                     { link='Bold' })
-    hi('MasonHighlight',                   { fg=p.accent, bg=nil })
-    hi('MasonHighlightBlock',              { fg=p.bg,     bg=p.accent })
-    hi('MasonHighlightBlockBold',          { link='MasonHeaderSecondary' })
-    hi('MasonHighlightBlockBoldSecondary', { link='MasonHeader' })
-    hi('MasonHighlightBlockSecondary',     { fg=p.bg,     bg=p.azure })
-    hi('MasonHighlightSecondary',          { fg=p.azure,  bg=nil })
-    hi('MasonLink',                        { link='MasonHighlight' })
-    hi('MasonMuted',                       { link='Comment' })
-    hi('MasonMutedBlock',                  { fg=p.bg,     bg=p.bg_mid2 })
-    hi('MasonMutedBlockBold',              { fg=p.bg,     bg=p.bg_mid2, bold=true })
-  end
-
-  if has_integration("saghen/blink.cmp") then
-    hi("BlinkCmpLabelDescription", { fg=p.bg_mid2, bg=p.bg_edge })
-    hi("BlinkCmpLabelDetail", { fg=p.bg_mid2, bg=nil })
-	hi("BlinkCmpMenuBorder", { fg=p.accent, bg=p.bg_mid })
-	hi("BlinkCmpDocBorder", { link="FloatBorder" })
-	hi("BlinkCmpSignatureHelpBorder", { link="FloatBorder" })
-
     hi('BlinkPairsBlue',   { fg=p.azure,  bg=nil })
     hi('BlinkPairsCyan',   { fg=p.cyan,   bg=nil })
     hi('BlinkPairsGreen',  { fg=p.green,  bg=nil })
@@ -1580,7 +1574,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('BlinkPairsViolet', { fg=p.purple, bg=nil })
     hi('BlinkPairsYellow', { fg=p.yellow, bg=nil })
 
-	hi('BlinkIndentBlue',   { fg=p.azure,  bg=nil })
+    hi('BlinkIndentBlue',   { fg=p.azure,  bg=nil })
     hi('BlinkIndentCyan',   { fg=p.cyan,   bg=nil })
     hi('BlinkIndentGreen',  { fg=p.green,  bg=nil })
     hi('BlinkIndentOrange', { fg=p.orange, bg=nil })

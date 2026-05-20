@@ -9,7 +9,7 @@
 ---   See |MiniHues.config| for setup inspiration.
 ---
 --- - Configurable:
----     - Number of hues used for non-base colors (from 0 to 8).
+---     - Number of hues used for non-base colors (from 0 to 12).
 ---     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
 ---     - Accent color used for some selected UI elements.
 ---     - Plugin integration (can be selectively enabled for faster startup).
@@ -221,6 +221,7 @@ end
 ---   setup({ background = '#281e2c', foreground = '#c9c5cb' }) -- purple
 ---
 ---   -- Choose number of accent colors
+---   setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 12 })
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 6 })
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 4 })
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', n_hues = 2 })
@@ -246,13 +247,13 @@ background = nil,
 foreground = nil,
 
 	-- Number of hues used for non-base colors
-	n_hues = 8,
+	n_hues = 12,
 
 	-- Saturation. One of 'low', 'lowmedium', 'medium', 'mediumhigh', 'high'.
 	saturation = "medium",
 
-	-- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'green',
-	-- 'cyan', 'azure', 'blue', 'purple'
+	-- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'lime',
+	-- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink'
 	accent = "bg",
 
 	-- Plugin integrations. Use `default = false` to disable all integrations.
@@ -304,8 +305,8 @@ foreground = nil,
 ---       Example: for background hue 0, foreground hue 180, and `config.n_hues` 2
 ---       the output grid will be `{ 90, 270 }`.
 ---
----     - For each hue of reference color (which itself is an equidistant grid
----       of 8 hues) compute the closest value from the grid. This allows
+---     - For each named reference color (from a 12-color wheel) compute the
+---       closest value from the grid. This allows
 ---       operating in same terms (like "red", "green") despite maybe actually
 ---       having less different hues.
 ---
@@ -333,8 +334,9 @@ foreground = nil,
 ---   - Fields like <bg_xxx> and <fg_xxx> are essentially <bg> and <fg> but with
 ---     different lightness values: `_edge`/`_edge2` - closer to edge lightness,
 ---     `_mid`/`_mid2` - closer to middle lightness.
----   - Fields for non-base colors (<red>, <orange>, <yellow>, <green>, <cyan>,
----     <azure>, <blue>, <purple>) have the same lightness as foreground.
+---   - Fields for non-base colors (<red>, <orange>, <yellow>, <lime>,
+---     <green>, <teal>, <cyan>, <azure>, <blue>, <indigo>, <purple>,
+---     <pink>) have the same lightness as foreground.
 ---   - Fields for non-base colors with <_bg> suffix have the same lightness as
 ---     background.
 ---   - <accent> and <accent_bg> represent accent colors with foreground and
@@ -393,8 +395,14 @@ MiniHues.make_palette = function(config)
     yellow    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.yellow }),
     yellow_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.yellow }),
 
+    lime      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.lime }),
+    lime_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.lime }),
+
     green     = H.oklch2hex({ l = fg_l, c = chroma, h = hues.green }),
     green_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues.green }),
+
+    teal      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.teal }),
+    teal_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.teal }),
 
     cyan      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.cyan }),
     cyan_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.cyan }),
@@ -405,8 +413,14 @@ MiniHues.make_palette = function(config)
     blue      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.blue }),
     blue_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.blue }),
 
+    indigo    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.indigo }),
+    indigo_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.indigo }),
+
     purple    = H.oklch2hex({ l = fg_l, c = chroma, h = hues.purple }),
     purple_bg = H.oklch2hex({ l = bg_l, c = chroma, h = hues.purple }),
+
+    pink      = H.oklch2hex({ l = fg_l, c = chroma, h = hues.pink }),
+    pink_bg   = H.oklch2hex({ l = bg_l, c = chroma, h = hues.pink }),
   }
 
   -- Manage 'bg' and 'fg' accents separately to ensure that corresponding
@@ -457,6 +471,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   if type(plugins) ~= 'table' then H.error('`plugins` should be table with plugin integrations data.') end
   opts = vim.tbl_extend('force', { autoadjust = MiniHues.config.autoadjust }, opts or {})
 
+  palette = H.normalize_palette(palette)
   H.palette = vim.deepcopy(palette)
 
   -- Prepare highlighting application. Notes:
@@ -498,7 +513,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('CursorLineNr',   { fg=p.accent,  bg=nil,       bold=true })
   hi('CursorLineSign', { fg=p.bg_mid2, bg=nil })
   hi('DiffAdd',        { fg=nil,       bg=p.green_bg })
-  hi('DiffChange',     { fg=nil,       bg=p.cyan_bg })
+  hi('DiffChange',     { fg=nil,       bg=p.teal_bg })
   hi('DiffDelete',     { fg=nil,       bg=p.red_bg })
   hi('DiffText',       { fg=nil,       bg=p.yellow_bg })
   hi('DiffTextAdd',    { link='DiffAdd' })
@@ -541,9 +556,9 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('SignColumn',     { fg=p.bg_mid2, bg=nil })
   hi('SpecialKey',     { fg=p.accent,  bg=nil })
   hi('SpellBad',       { fg=nil,       bg=nil,       sp=p.red,    undercurl=true })
-  hi('SpellCap',       { fg=nil,       bg=nil,       sp=p.cyan,   undercurl=true })
+  hi('SpellCap',       { fg=nil,       bg=nil,       sp=p.teal,   undercurl=true })
   hi('SpellLocal',     { fg=nil,       bg=nil,       sp=p.yellow, undercurl=true })
-  hi('SpellRare',      { fg=nil,       bg=nil,       sp=p.blue,   undercurl=true })
+  hi('SpellRare',      { fg=nil,       bg=nil,       sp=p.indigo, undercurl=true })
   hi('StatusLine',     { fg=p.fg_mid,  bg=p.accent_bg })
   hi('StatusLineNC',   { fg=p.fg_mid,  bg=p.bg_edge })
   hi('StderrMsg',      { link='ErrorMsg' })
@@ -567,8 +582,8 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   -- Standard syntax (affects treesitter)
   hi('Boolean',        { link='Constant' })
-  hi('Character', { link = 'Constant' })
-  hi('Comment',        { fg=p.fg_mid2, bg=nil, italic = true })
+  hi('Character',      { link='Constant' })
+  hi('Comment',        { fg=p.fg_mid2, bg=nil, italic=true })
   hi('Conditional',    { link='Statement' })
   hi('Constant',       { fg=p.purple,  bg=nil })
   hi('Debug',          { link='Special' })
@@ -576,20 +591,20 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('Delimiter',      { fg=p.orange,  bg=nil })
   hi('Error',          { fg=nil,       bg=p.red_bg })
   hi('Exception',      { link='Statement' })
-  hi('Float',          { link='Constant' })
+  hi('Float',          { link='Number' })
   hi('Function',       { fg=p.azure,   bg=nil })
   hi('Identifier',     { fg=p.yellow,  bg=nil })
   hi('Ignore',         { fg=nil,       bg=nil })
   hi('Include',        { link='PreProc' })
-  hi('Keyword',        { fg=p.accent, bold=true })
+  hi('Keyword',        { fg=p.accent,  bg=nil, bold=true })
   hi('Label',          { link='Statement' })
   hi('Macro',          { link='PreProc' })
-  hi('Number',         { link='Constant' })
+  hi('Number',         { fg=p.pink,    bg=nil })
   hi('Operator',       { fg=p.fg,      bg=nil })
   hi('PreCondit',      { link='PreProc' })
-  hi('PreProc',        { fg=p.blue,    bg=nil })
+  hi('PreProc',        { fg=p.indigo,  bg=nil })
   hi('Repeat',         { link='Statement' })
-  hi('Special',        { fg=p.cyan,    bg=nil })
+  hi('Special',        { fg=p.teal,    bg=nil })
   hi('SpecialChar',    { link='Special' })
   hi('SpecialComment', { link='Special' })
   hi('Statement',      { fg=p.fg,      bg=nil,         bold=true })
@@ -608,12 +623,12 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   -- Patch diff
   hi('diffAdded',   { fg=p.green,  bg=nil })
-  hi('diffChanged', { fg=p.cyan,   bg=nil })
+  hi('diffChanged', { fg=p.teal,   bg=nil })
   hi('diffFile',    { fg=p.yellow, bg=nil })
   hi('diffLine',    { fg=p.blue,   bg=nil })
   hi('diffRemoved', { fg=p.red,    bg=nil })
   hi('Added',       { fg=p.green,  bg=nil })
-  hi('Changed',     { fg=p.cyan,   bg=nil })
+  hi('Changed',     { fg=p.teal,   bg=nil })
   hi('Removed',     { fg=p.red,    bg=nil })
 
   -- Git commit
@@ -650,19 +665,19 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   -- - Distance from hue to error hue should increase the less important it is
   --   (warning - info - ok - hint).
   hi('DiagnosticError', { fg=p.red,    bg=nil })
-  hi('DiagnosticHint',  { fg=p.cyan,   bg=nil })
+  hi('DiagnosticHint',  { fg=p.teal,   bg=nil })
   hi('DiagnosticInfo',  { fg=p.blue,   bg=nil })
   hi('DiagnosticOk',    { fg=p.green,  bg=nil })
   hi('DiagnosticWarn',  { fg=p.yellow, bg=nil })
 
   hi('DiagnosticUnderlineError', { fg=nil, bg=nil, sp=p.red,    underline=true })
-  hi('DiagnosticUnderlineHint',  { fg=nil, bg=nil, sp=p.cyan,   underline=true })
+  hi('DiagnosticUnderlineHint',  { fg=nil, bg=nil, sp=p.teal,   underline=true })
   hi('DiagnosticUnderlineInfo',  { fg=nil, bg=nil, sp=p.blue,   underline=true })
   hi('DiagnosticUnderlineOk',    { fg=nil, bg=nil, sp=p.green,  underline=true })
   hi('DiagnosticUnderlineWarn',  { fg=nil, bg=nil, sp=p.yellow, underline=true })
 
   hi('DiagnosticFloatingError', { fg=p.red,    bg=p.bg_edge })
-  hi('DiagnosticFloatingHint',  { fg=p.cyan,   bg=p.bg_edge })
+  hi('DiagnosticFloatingHint',  { fg=p.teal,   bg=p.bg_edge })
   hi('DiagnosticFloatingInfo',  { fg=p.blue,   bg=p.bg_edge })
   hi('DiagnosticFloatingOk',    { fg=p.green,  bg=p.bg_edge })
   hi('DiagnosticFloatingWarn',  { fg=p.yellow, bg=p.bg_edge })
@@ -758,18 +773,18 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@keyword.coroutine', { link='@keyword' })
   hi('@keyword.function',  { link='@keyword' })
   hi('@keyword.operator',  { link='@keyword' })
-  hi('@keyword.import',    { fg=p.blue,   bg=nil, bold=true })
+  hi('@keyword.import',    { fg=p.indigo, bg=nil, bold=true })
   hi('@keyword.type',      { link='@keyword' })
   hi('@keyword.modifier',  { link='@keyword' })
   hi('@keyword.repeat',    { link='@keyword' })
   hi('@keyword.return',    { fg=p.orange, bg=nil, bold=true })
-  hi('@keyword.debug',     { fg=p.cyan,   bg=nil, bold=true })
+  hi('@keyword.debug',     { fg=p.teal,   bg=nil, bold=true })
   hi('@keyword.exception', { link='@keyword' })
 
   hi('@keyword.conditional',         { link='@keyword' })
   hi('@keyword.conditional.ternary', { link='@keyword' })
 
-  hi('@keyword.directive',        { fg=p.blue, bg=nil, bold=true })
+  hi('@keyword.directive',        { fg=p.indigo, bg=nil, bold=true })
   hi('@keyword.directive.define', { link='@keyword.directive' })
 
   hi('@punctuation.delimiter', { link='Delimiter' })
@@ -792,9 +807,9 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@markup.heading',   { link='Title' })
   hi('@markup.heading.1', { fg=p.orange, bg=nil })
   hi('@markup.heading.2', { fg=p.yellow, bg=nil })
-  hi('@markup.heading.3', { fg=p.green,  bg=nil })
-  hi('@markup.heading.4', { fg=p.cyan,   bg=nil })
-  hi('@markup.heading.5', { fg=p.azure,  bg=nil })
+  hi('@markup.heading.3', { fg=p.lime,   bg=nil })
+  hi('@markup.heading.4', { fg=p.green,  bg=nil })
+  hi('@markup.heading.5', { fg=p.teal,   bg=nil })
   hi('@markup.heading.6', { fg=p.blue,   bg=nil })
 
   hi('@markup.quote',       { link='@string.special' })
@@ -1300,12 +1315,12 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('RenderMarkdownH1Bg',       { fg=nil,      bg=p.orange_bg })
     hi('RenderMarkdownH2',         { fg=p.yellow, bg=nil })
     hi('RenderMarkdownH2Bg',       { fg=nil,      bg=p.yellow_bg })
-    hi('RenderMarkdownH3',         { fg=p.green,  bg=nil })
-    hi('RenderMarkdownH3Bg',       { fg=nil,      bg=p.green_bg })
-    hi('RenderMarkdownH4',         { fg=p.cyan,   bg=nil })
-    hi('RenderMarkdownH4Bg',       { fg=nil,      bg=p.cyan_bg })
-    hi('RenderMarkdownH5',         { fg=p.azure,  bg=nil })
-    hi('RenderMarkdownH5Bg',       { fg=nil,      bg=p.azure_bg })
+    hi('RenderMarkdownH3',         { fg=p.lime,   bg=nil })
+    hi('RenderMarkdownH3Bg',       { fg=nil,      bg=p.lime_bg })
+    hi('RenderMarkdownH4',         { fg=p.green,  bg=nil })
+    hi('RenderMarkdownH4Bg',       { fg=nil,      bg=p.green_bg })
+    hi('RenderMarkdownH5',         { fg=p.teal,   bg=nil })
+    hi('RenderMarkdownH5Bg',       { fg=nil,      bg=p.teal_bg })
     hi('RenderMarkdownH6',         { fg=p.blue,   bg=nil })
     hi('RenderMarkdownH6Bg',       { fg=nil,      bg=p.blue_bg })
     hi('RenderMarkdownTodo',       { link='Todo' })
@@ -1433,6 +1448,22 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('MarkviewPalette7Fg',   { fg=p.blue,   bg=nil })
     hi('MarkviewPalette7Bg',   { fg=nil,      bg=p.blue_bg })
     hi('MarkviewPalette7Sign', { fg=p.blue,   bg=nil })
+    hi('MarkviewPalette8',     { fg=p.lime,   bg=p.lime_bg })
+    hi('MarkviewPalette8Fg',   { fg=p.lime,   bg=nil })
+    hi('MarkviewPalette8Bg',   { fg=nil,      bg=p.lime_bg })
+    hi('MarkviewPalette8Sign', { fg=p.lime,   bg=nil })
+    hi('MarkviewPalette9',     { fg=p.teal,   bg=p.teal_bg })
+    hi('MarkviewPalette9Fg',   { fg=p.teal,   bg=nil })
+    hi('MarkviewPalette9Bg',   { fg=nil,      bg=p.teal_bg })
+    hi('MarkviewPalette9Sign', { fg=p.teal,   bg=nil })
+    hi('MarkviewPalette10',    { fg=p.indigo, bg=p.indigo_bg })
+    hi('MarkviewPalette10Fg',  { fg=p.indigo, bg=nil })
+    hi('MarkviewPalette10Bg',  { fg=nil,      bg=p.indigo_bg })
+    hi('MarkviewPalette10Sign', { fg=p.indigo, bg=nil })
+    hi('MarkviewPalette11',    { fg=p.pink,   bg=p.pink_bg })
+    hi('MarkviewPalette11Fg',  { fg=p.pink,   bg=nil })
+    hi('MarkviewPalette11Bg',  { fg=nil,      bg=p.pink_bg })
+    hi('MarkviewPalette11Sign', { fg=p.pink,   bg=nil })
   end
 
   if has_integration('phaazon/hop.nvim') then
@@ -1677,7 +1708,10 @@ H.tau = 2 * math.pi
 
 H.saturation_values = { "low", "lowmedium", "medium", "mediumhigh", "high" }
 
-H.accent_values = { "bg", "fg", "red", "orange", "yellow", "green", "cyan", "azure", "blue", "purple" }
+H.accent_values = {
+  "bg", "fg", "red", "orange", "yellow", "lime", "green",
+  "teal", "cyan", "azure", "blue", "indigo", "purple", "pink",
+}
 
 -- Cusps for Oklch color space. See 'mini.colors' for more details.
 --stylua: ignore
@@ -1768,6 +1802,26 @@ H.apply_config = function(config)
 	MiniHues.apply_palette(MiniHues.make_palette(config), config.plugins, opts)
 end
 
+H.normalize_palette = function(palette)
+	local res = vim.deepcopy(palette)
+	local fallback_map = {
+		lime = "yellow",
+		lime_bg = "yellow_bg",
+		teal = "cyan",
+		teal_bg = "cyan_bg",
+		indigo = "blue",
+		indigo_bg = "blue_bg",
+		pink = "purple",
+		pink_bg = "purple_bg",
+	}
+
+	for new_name, fallback_name in pairs(fallback_map) do
+		if res[new_name] == nil then res[new_name] = res[fallback_name] end
+	end
+
+	return res
+end
+
 -- Palette --------------------------------------------------------------------
 H.make_hues = function(bg_h, fg_h, n_hues)
 	local res = { bg = bg_h, fg = fg_h }
@@ -1805,7 +1859,8 @@ H.make_hues = function(bg_h, fg_h, n_hues)
 		table.insert(grid, i * period + d)
 	end
 
-	-- Normalize equidistant grid to be base 8 colors
+	-- Normalize equidistant grid to a 12-color wheel so named palette colors
+	-- stay predictable even when fewer distinct hues are requested.
 	local dist_fun = function(x, y)
 		return H.dist_period(x, y, 360)
 	end
@@ -1815,13 +1870,17 @@ H.make_hues = function(bg_h, fg_h, n_hues)
 
   --stylua: ignore start
   res.red    = approx(0)
-  res.orange = approx(45)
-  res.yellow = approx(90)
-  res.green  = approx(135)
+  res.orange = approx(30)
+  res.yellow = approx(60)
+  res.lime   = approx(90)
+  res.green  = approx(120)
+  res.teal   = approx(150)
   res.cyan   = approx(180)
-  res.azure  = approx(225)
-  res.blue   = approx(270)
-  res.purple = approx(315)
+  res.azure  = approx(210)
+  res.blue   = approx(240)
+  res.indigo = approx(270)
+  res.purple = approx(300)
+  res.pink   = approx(330)
 	--stylua: ignore end
 
 	return res
@@ -1836,10 +1895,10 @@ H.validate_hex = function(x, name)
 end
 
 H.validate_n_hues = function(x)
-	if type(x) == "number" and 0 <= x and x <= 8 then
+	if type(x) == "number" and 0 <= x and x <= 12 then
 		return x
 	end
-	local msg = string.format("`n_hues` should be a number between 0 and 8", name)
+	local msg = string.format("`n_hues` should be a number between 0 and 12")
 	H.error(msg)
 end
 

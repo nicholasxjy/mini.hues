@@ -1617,7 +1617,8 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration("saghen/blink.cmp") then
-    hi("BlinkCmpLabelDescription", { fg=p.bg_mid2, bg=p.bg_edge })
+    hi("BlinkCmpMenu", { link="NormalFloat" })
+    hi("BlinkCmpLabelDescription", {fg=p.bg_mid2, bg=p.bg_edge })
     hi("BlinkCmpLabelDetail", { fg=p.bg_mid2, bg=nil })
     hi("BlinkCmpMenuBorder", { fg=p.accent, bg=p.bg_mid })
     hi("BlinkCmpDocBorder", { link="FloatBorder" })
@@ -1648,6 +1649,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('BlinkCmpKindUnit',          { link='Special' })
     hi('BlinkCmpKindValue',         { link='Identifier' })
     hi('BlinkCmpKindVariable',      { link='Delimiter' })
+
     hi('BlinkPairsBlue',   { fg=p.azure,  bg=nil })
     hi('BlinkPairsCyan',   { fg=p.cyan,   bg=nil })
     hi('BlinkPairsGreen',  { fg=p.green,  bg=nil })
@@ -1760,8 +1762,20 @@ H.tau = 2 * math.pi
 H.saturation_values = { "low", "lowmedium", "medium", "mediumhigh", "high" }
 
 H.accent_values = {
-  "bg", "fg", "red", "orange", "yellow", "lime", "green",
-  "teal", "cyan", "azure", "blue", "indigo", "purple", "pink",
+	"bg",
+	"fg",
+	"red",
+	"orange",
+	"yellow",
+	"lime",
+	"green",
+	"teal",
+	"cyan",
+	"azure",
+	"blue",
+	"indigo",
+	"purple",
+	"pink",
 }
 
 -- Cusps for Oklch color space. See 'mini.colors' for more details.
@@ -1868,7 +1882,9 @@ H.normalize_palette = function(palette)
 	}
 
 	for new_name, fallback_name in pairs(fallback_map) do
-		if res[new_name] == nil then res[new_name] = res[fallback_name] end
+		if res[new_name] == nil then
+			res[new_name] = res[fallback_name]
+		end
 	end
 
 	return res

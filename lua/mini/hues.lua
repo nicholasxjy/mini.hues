@@ -1569,7 +1569,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi("BlinkCmpMenu", { link="NormalFloat" })
     hi("BlinkCmpLabelDescription", {fg=p.bg_mid2, bg=p.bg_edge })
     hi("BlinkCmpLabelDetail", { fg=p.bg_mid2, bg=nil })
-    hi("BlinkCmpMenuBorder", { fg=p.accent, bg=p.bg_mid })
+    hi("BlinkCmpMenuBorder", { link="FloatBorder" })
     hi("BlinkCmpDocBorder", { link="FloatBorder" })
     hi("BlinkCmpSignatureHelpBorder", { link="FloatBorder" })
 

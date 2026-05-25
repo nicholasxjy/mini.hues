@@ -863,7 +863,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.variable',      { link='@variable' })
 
   hi('@lsp.mod.defaultLibrary', { link='Special' })
-  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil })
+  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil, strikethrough=true })
 
   -- Plugins
   -- nvim-mini/mini.nvim

@@ -804,7 +804,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.typeParameter', { link='@type.definition' })
   hi('@lsp.type.variable',      { link='@variable' })
 
-  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil })
+  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil, strikethrough=true })
 
   -- New tree-sitter groups
   if vim.fn.has('nvim-0.10') == 1 then

@@ -1155,15 +1155,15 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
     hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })
     hi("SnacksPickerBoxTitle", { fg = p.red, bg = p.bg, bold = true })
-	  hi("SnacksPickerListTitle", { fg = p.green, bg = p.bg, bold = true })
+	hi("SnacksPickerListTitle", { fg = p.green, bg = p.bg, bold = true })
 
-    hi("SnacksPickerPreviewBorder", { fg = p.bg_edge, bg = p.bg_edge })
-    hi("SnacksPickerListBorder", { fg = p.bg_edge, bg = p.bg_edge })
-    hi("SnacksPickerBoxBorder", { fg = p.bg_edge, bg = p.bg_edge })
-    hi("SnacksPickerInputBorder", { fg = p.bg_edge, bg = p.bg_edge })
-    hi("SnacksPickerInput", { fg=p.accent, bg=p.bg_edge, bold=true })
-	  hi("SnacksPickerInputPrompt", { fg=p.accent, bg=p.bg, bold=true })
-	  hi("SnacksPickerPreview", { bg=p.bg })
+    hi("SnacksPickerPreviewBorder", { fg = p.blue, bg = p.bg })
+    hi("SnacksPickerListBorder", { fg = p.lime, bg = p.bg })
+    hi("SnacksPickerBoxBorder", { fg = p.accent, bg = p.bg })
+    hi("SnacksPickerInputBorder", { fg = p.accent, bg = p.bg })
+    hi("SnacksPickerInput", { fg=p.accent, bg=p.bg, bold=true })
+	hi("SnacksPickerInputPrompt", { fg=p.accent, bg=p.bg, bold=true })
+	hi("SnacksPickerPreview", { bg=p.bg })
 
   end
 

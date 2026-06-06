@@ -1089,20 +1089,20 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('SnacksPickerTotals',             { link='Comment' })
     hi('SnacksPickerUnselected',         { link='Comment' })
 
-    hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true })
+    hi("SnacksPickerMatch", { fg = p.accent, bg = p.bg, bold = true, underdouble = true })
     hi("SnacksPickerTitle", { fg = p.yellow, bg = p.bg, bold = true })
     hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
     hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })
     hi("SnacksPickerBoxTitle", { fg = p.red, bg = p.bg, bold = true })
-	hi("SnacksPickerListTitle", { fg = p.green, bg = p.bg, bold = true })
+    hi("SnacksPickerListTitle", { fg = p.green, bg = p.bg, bold = true })
 
     hi("SnacksPickerPreviewBorder", { fg = p.blue, bg = p.bg })
     hi("SnacksPickerListBorder", { fg = p.green, bg = p.bg })
     hi("SnacksPickerBoxBorder", { fg = p.accent, bg = p.bg })
     hi("SnacksPickerInputBorder", { fg = p.lime, bg = p.bg })
     hi("SnacksPickerInput", { fg=p.accent, bg=p.bg, bold=true })
-	hi("SnacksPickerInputPrompt", { fg=p.accent, bg=p.bg, bold=true })
-	hi("SnacksPickerPreview", { bg=p.bg })
+    hi("SnacksPickerInputPrompt", { fg=p.accent, bg=p.bg, bold=true })
+    hi("SnacksPickerPreview", { bg=p.bg })
 
   end
 

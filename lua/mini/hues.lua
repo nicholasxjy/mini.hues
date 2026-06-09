@@ -527,6 +527,15 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   vim.g.colors_name = nil
 
   local p, autoadjust = palette, opts.autoadjust
+  local heading_alpha = 0.8
+  local heading_colors = {
+    H.blend_hex(p.orange, p.bg, heading_alpha),
+    H.blend_hex(p.yellow, p.bg, heading_alpha),
+    H.blend_hex(p.lime,   p.bg, heading_alpha),
+    H.blend_hex(p.green,  p.bg, heading_alpha),
+    H.blend_hex(p.teal,   p.bg, heading_alpha),
+    H.blend_hex(p.blue,   p.bg, heading_alpha),
+  }
   local hi = function(name, data) vim.api.nvim_set_hl(0, name, data) end
   local has_integration = function(name)
     local entry = plugins[name]
@@ -930,12 +939,12 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('@markup.underline',     { link='@text.underline' })
 
     hi('@markup.heading',   { link='@text.title' })
-    hi('@markup.heading.1', { fg=p.orange, bg=nil })
-    hi('@markup.heading.2', { fg=p.yellow, bg=nil })
-    hi('@markup.heading.3', { fg=p.lime,   bg=nil })
-    hi('@markup.heading.4', { fg=p.green,  bg=nil })
-    hi('@markup.heading.5', { fg=p.teal,   bg=nil })
-    hi('@markup.heading.6', { fg=p.blue,   bg=nil })
+    hi('@markup.heading.1', { fg=heading_colors[1], bg=nil })
+    hi('@markup.heading.2', { fg=heading_colors[2], bg=nil })
+    hi('@markup.heading.3', { fg=heading_colors[3], bg=nil })
+    hi('@markup.heading.4', { fg=heading_colors[4], bg=nil })
+    hi('@markup.heading.5', { fg=heading_colors[5], bg=nil })
+    hi('@markup.heading.6', { fg=heading_colors[6], bg=nil })
 
     hi('@markup.heading.1.delimiter.vimdoc', { fg=p.bg_mid2, bg=nil, bold=true })
     hi('@markup.heading.2.delimiter.vimdoc', { fg=p.bg_mid2, bg=nil, bold=true })
@@ -2051,6 +2060,16 @@ H.rgb2hex = function(rgb)
 	local b = H.clip(H.round(rgb.b), 0, 255)
 
 	return string.format("#%02x%02x%02x", r, g, b)
+end
+
+H.blend_hex = function(fg_hex, bg_hex, alpha)
+	local fg, bg = H.hex2rgb(fg_hex), H.hex2rgb(bg_hex)
+
+	return H.rgb2hex({
+		r = alpha * fg.r + (1 - alpha) * bg.r,
+		g = alpha * fg.g + (1 - alpha) * bg.g,
+		b = alpha * fg.b + (1 - alpha) * bg.b,
+	})
 end
 
 -- RGB in [0; 255] <-> Oklab

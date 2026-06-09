@@ -447,6 +447,7 @@ local fg_l = H.hex2oklch(p.fg).l
 local fg_mid_l = H.hex2oklch(p.fg_mid).l
 local fg_mid2_l = H.hex2oklch(p.fg_mid2).l
 local chroma_scale = 1.15
+local lightness_scale = 0.8
 
 local target_lightness = {
 red = fg_edge2_l,
@@ -467,7 +468,7 @@ orange = p.orange, violet = p.purple, blue = p.azure,
 
 for name, color in pairs(source) do
 local lch = H.hex2oklch(color)
-res[name] = H.oklch2hex({ l = target_lightness[name], c = chroma_scale * lch.c, h = lch.h })
+res[name] = H.oklch2hex({ l = lightness_scale * target_lightness[name], c = chroma_scale * lch.c, h = lch.h })
 end
 
 return res

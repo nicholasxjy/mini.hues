@@ -518,7 +518,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   vim.g.colors_name = nil
 
   local p, autoadjust = palette, opts.autoadjust
-  local heading_alpha = 0.8
+  local heading_alpha = 0.5
   local heading_colors = {
     H.blend_hex(p.orange, p.bg, heading_alpha),
     H.blend_hex(p.yellow, p.bg, heading_alpha),

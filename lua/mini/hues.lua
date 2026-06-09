@@ -440,6 +440,38 @@ MiniHues.make_palette = function(config)
 	return res
 end
 
+H.make_rainbow_delimiter_palette = function(p)
+local fg_edge2_l = H.hex2oklch(p.fg_edge2).l
+local fg_edge_l = H.hex2oklch(p.fg_edge).l
+local fg_l = H.hex2oklch(p.fg).l
+local fg_mid_l = H.hex2oklch(p.fg_mid).l
+local fg_mid2_l = H.hex2oklch(p.fg_mid2).l
+
+local target_lightness = {
+red = fg_edge2_l,
+cyan = fg_mid2_l,
+yellow = fg_edge_l,
+green = fg_mid_l,
+orange = 0.5 * (fg_edge_l + fg_l),
+violet = 0.5 * (fg_l + fg_mid_l),
+blue = fg_l,
+}
+
+local res = {}
+--stylua: ignore
+local source = {
+red = p.red, cyan = p.cyan, yellow = p.yellow, green = p.green,
+orange = p.orange, violet = p.purple, blue = p.azure,
+}
+
+for name, color in pairs(source) do
+local lch = H.hex2oklch(color)
+res[name] = H.oklch2hex({ l = target_lightness[name], c = 1.15 * lch.c, h = lch.h })
+end
+
+return res
+end
+
 --stylua: ignore
 --- Apply palette
 ---
@@ -1194,13 +1226,14 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration('HiPhish/rainbow-delimiters.nvim') then
-    hi('RainbowDelimiterRed',    { fg=p.red,    bg=nil })
-    hi('RainbowDelimiterCyan',   { fg=p.cyan,   bg=nil })
-    hi('RainbowDelimiterYellow', { fg=p.yellow, bg=nil })
-    hi('RainbowDelimiterGreen',  { fg=p.green,  bg=nil })
-    hi('RainbowDelimiterOrange', { fg=p.orange, bg=nil })
-    hi('RainbowDelimiterViolet', { fg=p.purple, bg=nil })
-    hi('RainbowDelimiterBlue',   { fg=p.azure,  bg=nil })
+    local rainbow_p = H.make_rainbow_delimiter_palette(p)
+    hi('RainbowDelimiterRed',    { fg=rainbow_p.red,    bg=nil })
+    hi('RainbowDelimiterCyan',   { fg=rainbow_p.cyan,   bg=nil })
+    hi('RainbowDelimiterYellow', { fg=rainbow_p.yellow, bg=nil })
+    hi('RainbowDelimiterGreen',  { fg=rainbow_p.green,  bg=nil })
+    hi('RainbowDelimiterOrange', { fg=rainbow_p.orange, bg=nil })
+    hi('RainbowDelimiterViolet', { fg=rainbow_p.violet, bg=nil })
+    hi('RainbowDelimiterBlue',   { fg=rainbow_p.blue,   bg=nil })
   end
 
   if has_integration('hrsh7th/nvim-cmp') then

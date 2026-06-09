@@ -457,7 +457,7 @@ H.make_rainbow_delimiter_palette = function(p)
 	local fg_mid_l = H.hex2oklch(p.fg_mid).l
 	local fg_mid2_l = H.hex2oklch(p.fg_mid2).l
 	local chroma_scale = 1.15
-	local lightness_scale = 0.8
+	local lightness_scale = 0.5
 
 	local target_lightness = {
 		red = fg_edge2_l,
@@ -1415,18 +1415,18 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('RenderMarkdownCode',       { fg=nil,      bg=p.bg_edge })
     hi('RenderMarkdownCodeInline', { fg=nil,      bg=p.bg_edge })
     hi('RenderMarkdownDash',       { fg=p.accent, bg=nil })
-    hi('RenderMarkdownH1',         { fg=p.orange, bg=nil })
-    hi('RenderMarkdownH1Bg',       { fg=nil,      bg=p.orange_bg })
-    hi('RenderMarkdownH2',         { fg=p.yellow, bg=nil })
-    hi('RenderMarkdownH2Bg',       { fg=nil,      bg=p.yellow_bg })
-    hi('RenderMarkdownH3',         { fg=p.lime,   bg=nil })
-    hi('RenderMarkdownH3Bg',       { fg=nil,      bg=p.lime_bg })
-    hi('RenderMarkdownH4',         { fg=p.green,  bg=nil })
-    hi('RenderMarkdownH4Bg',       { fg=nil,      bg=p.green_bg })
-    hi('RenderMarkdownH5',         { fg=p.teal,   bg=nil })
-    hi('RenderMarkdownH5Bg',       { fg=nil,      bg=p.teal_bg })
-    hi('RenderMarkdownH6',         { fg=p.blue,   bg=nil })
-    hi('RenderMarkdownH6Bg',       { fg=nil,      bg=p.blue_bg })
+    hi('RenderMarkdownH1',         { fg=p.orange, bg=nil, bold=true })
+    hi('RenderMarkdownH1Bg',       { fg=nil,      bg=heading_colors[1] })
+    hi('RenderMarkdownH2',         { fg=p.yellow, bg=nil, bold=true })
+    hi('RenderMarkdownH2Bg',       { fg=nil,      bg=heading_colors[2] })
+    hi('RenderMarkdownH3',         { fg=p.lime,   bg=nil, bold=true })
+    hi('RenderMarkdownH3Bg',       { fg=nil,      bg=heading_colors[3] })
+    hi('RenderMarkdownH4',         { fg=p.green,  bg=nil, bold=true })
+    hi('RenderMarkdownH4Bg',       { fg=nil,      bg=heading_colors[4] })
+    hi('RenderMarkdownH5',         { fg=p.teal,   bg=nil, bold=true })
+    hi('RenderMarkdownH5Bg',       { fg=nil,      bg=heading_colors[5] })
+    hi('RenderMarkdownH6',         { fg=p.blue,   bg=nil, bold=true })
+    hi('RenderMarkdownH6Bg',       { fg=nil,      bg=heading_colors[6] })
     hi('RenderMarkdownTodo',       { link='Todo' })
     hi('RenderMarkdownUnchecked',  { link='DiagnosticWarn' })
   end

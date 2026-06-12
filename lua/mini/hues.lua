@@ -457,7 +457,7 @@ H.make_rainbow_delimiter_palette = function(p)
 	local fg_mid_l = H.hex2oklch(p.fg_mid).l
 	local fg_mid2_l = H.hex2oklch(p.fg_mid2).l
 	local chroma_scale = 1.15
-	local lightness_scale = 0.5
+	local lightness_scale = 0.6
 
 	local target_lightness = {
 		red = fg_edge2_l,
@@ -1677,8 +1677,8 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi("BlinkCmpLabelDescription", {fg=p.bg_mid2, bg=p.bg_edge })
     hi("BlinkCmpLabelDetail", { fg=p.bg_mid2, bg=p.bg_edge })
     hi("BlinkCmpMenuBorder", { link="FloatBorder" })
-    hi("BlinkCmpDocBorder", { link="FloatBorder" })
-    hi("BlinkCmpSignatureHelpBorder", { link="FloatBorder" })
+    hi("BlinkCmpDocBorder", { fg=p.blue,bg=p.bg })
+    hi("BlinkCmpSignatureHelpBorder", { fg=p.green,bg=p.bg })
 
     hi('BlinkCmpKindClass',         { link='Type' })
     hi('BlinkCmpKindColor',         { link='Special' })

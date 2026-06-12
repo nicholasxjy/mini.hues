@@ -1296,9 +1296,10 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('FzfLuaTitle',      { link='FloatTitle' })
 	hi('FzfLuaBorder',     { fg=p.yellow, bg=p.bg })
 	hi('FzfLuaPreviewBorder', { fg=p.green, bg=p.bg })
-    hi('FzfLuaPreviewNormal', { bg=p.bg_edge })
+    hi('FzfLuaPreviewNormal', { bg=p.bg })
 	hi('FzfLuaDirPart',    { link = 'SnacksPickerDir' })
     hi('FzfLuaFzfMatch',   { link = 'SnacksPickerMatch' })
+	hi('FzfLuaFzfBorder',  { fg=p.cyan, bg=p.bg })
     hi('FzfLuaCursorLine', { fg=nil, bg=p.bg_mid2, bold=true })
   end
 

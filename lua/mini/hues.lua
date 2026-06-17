@@ -904,6 +904,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.type',          { link='@type' })
   hi('@lsp.type.typeParameter', { link='@type.definition' })
   hi('@lsp.type.variable',      { link='@variable' })
+  hi('@lsp.type.modifier',      { link='@keyword.modifier' })
 
   hi('@lsp.mod.defaultLibrary', { link='Special' })
   hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil, strikethrough=true })

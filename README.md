@@ -96,6 +96,7 @@ require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', sat
 -- Choose accent color
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = 'yellow' })
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = 'blue' })
+require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = '#1B3C53' })
 ```
 
 ## Features
@@ -105,7 +106,7 @@ require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', acc
 - Configurable:
     - Number of hues used for non-base colors (from 0 to 12).
     - Saturation level ('low', 'lowmedium', 'medium', 'mediumhigh', 'high').
-    - Accent color used for some selected UI elements.
+    - Accent color used for some selected UI elements (named preset or `#rrggbb`).
     - Plugin integration (can be selectively enabled for faster startup).
 
 - Random generator for base colors. Powers `randomhue` color scheme.
@@ -269,7 +270,8 @@ Stable branch:
   saturation = 'medium',
 
   -- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'lime',
-  -- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink'
+  -- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink',
+  -- or a '#rrggbb' hex string.
   accent = 'bg',
 
   -- Plugin integrations. Use `default = false` to disable all integrations.

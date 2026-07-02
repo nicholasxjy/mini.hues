@@ -13,7 +13,8 @@ Features:
 - Configurable:
     - Number of hues used for non-base colors (from 0 to 12).
     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
-    - Accent color used for some selected UI elements.
+    - Accent color used for some selected UI elements (named preset or
+      "#rrggbb").
     - Plugin integration (can be selectively enabled for faster startup).
 
 - Random generator for base colors. See |MiniHues.gen_random_base_colors()|.
@@ -169,7 +170,8 @@ Defaults ~
     saturation = 'medium',
 
     -- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'lime',
-    -- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink'
+    -- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink',
+    -- or a '#rrggbb' hex string.
     accent = 'bg',
 
     -- Plugin integrations. Use `default = false` to disable all integrations.
@@ -253,6 +255,7 @@ only one `setup` call): >lua
   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'yellow' })
   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'cyan' })
   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'blue' })
+  setup({ background = '#11262d', foreground = '#c0c8cc', accent = '#1B3C53' })
 <
 ------------------------------------------------------------------------------
                                                        *MiniHues.make_palette()*

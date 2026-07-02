@@ -11,7 +11,8 @@
 --- - Configurable:
 ---     - Number of hues used for non-base colors (from 0 to 12).
 ---     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
----     - Accent color used for some selected UI elements.
+---     - Accent color used for some selected UI elements (named preset or
+---       "#rrggbb").
 ---     - Plugin integration (can be selectively enabled for faster startup).
 ---
 --- - Random generator for base colors. See |MiniHues.gen_random_base_colors()|.
@@ -240,6 +241,7 @@ end
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'yellow' })
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'cyan' })
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'blue' })
+---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = '#1B3C53' })
 --- <
 MiniHues.config = {
 -- **Required** base colors as '#rrggbb' hex strings
@@ -253,7 +255,8 @@ foreground = nil,
 	saturation = "medium",
 
 	-- Accent color. One of: 'bg', 'fg', 'red', 'orange', 'yellow', 'lime',
-	-- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink'
+	-- 'green', 'teal', 'cyan', 'azure', 'blue', 'indigo', 'purple', 'pink',
+	-- or a '#rrggbb' hex string.
 	accent = "bg",
 
 	-- Plugin integrations. Use `default = false` to disable all integrations.
@@ -349,7 +352,7 @@ MiniHues.make_palette = function(config)
 	local fg = H.validate_hex(config.foreground, "foreground")
 	local n_hues = H.validate_n_hues(config.n_hues)
 	local saturation = H.validate_one_of(config.saturation, H.saturation_values, "saturation")
-	local accent = H.validate_one_of(config.accent, H.accent_values, "accent")
+	local accent = H.validate_accent(config.accent)
 
 	local bg_lch, fg_lch = H.hex2oklch(bg), H.hex2oklch(fg)
 	local bg_l, fg_l = bg_lch.l, fg_lch.l
@@ -432,9 +435,13 @@ MiniHues.make_palette = function(config)
   elseif accent == 'fg' then
     res.accent     = fg
     res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = fg_lch.h })
-  else
+  elseif vim.tbl_contains(H.accent_values, accent) then
     res.accent     = H.oklch2hex({ l = fg_l, c = chroma, h = hues[accent] })
     res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues[accent] })
+  else
+    local accent_lch = H.hex2oklch(accent)
+    res.accent     = H.oklch2hex({ l = fg_l, c = accent_lch.c, h = accent_lch.h })
+    res.accent_bg  = H.oklch2hex({ l = bg_l, c = accent_lch.c, h = accent_lch.h })
   end
 
 	return res
@@ -1849,9 +1856,7 @@ H.setup_config = function(config)
 	if not vim.tbl_contains(H.saturation_values, config.saturation) then
 		H.error("`saturation` should be one of " .. table.concat(vim.tbl_map(vim.inspect, H.saturation_values), ", "))
 	end
-	if not vim.tbl_contains(H.accent_values, config.accent) then
-		H.error("`accent` should be one of " .. table.concat(vim.tbl_map(vim.inspect, H.accent_values), ", "))
-	end
+	H.validate_accent(config.accent)
 	H.check_type("plugins", config.plugins, "table")
 	H.check_type("autoadjust", config.autoadjust, "boolean")
 
@@ -1952,8 +1957,12 @@ H.make_hues = function(bg_h, fg_h, n_hues)
 	return res
 end
 
+H.is_hex = function(x)
+	return type(x) == "string" and x:find("^#%x%x%x%x%x%x$") ~= nil
+end
+
 H.validate_hex = function(x, name)
-	if type(x) == "string" and x:find("^#%x%x%x%x%x%x$") ~= nil then
+	if H.is_hex(x) then
 		return x
 	end
 	local msg = string.format('`%s` should be hex color string in the form "#rrggbb", not %s', name, vim.inspect(x))
@@ -1975,6 +1984,14 @@ H.validate_one_of = function(x, choices, name)
 	local choices_string = table.concat(vim.tbl_map(vim.inspect, choices), ", ")
 	local msg = string.format("`%s` should be one of %s", name, choices_string)
 	H.error(msg)
+end
+
+H.validate_accent = function(x)
+	if vim.tbl_contains(H.accent_values, x) or H.is_hex(x) then
+		return x
+	end
+	local choices_string = table.concat(vim.tbl_map(vim.inspect, H.accent_values), ", ")
+	H.error('`accent` should be one of ' .. choices_string .. ' or hex color string in the form "#rrggbb"')
 end
 
 -- Color conversion -----------------------------------------------------------

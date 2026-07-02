@@ -96,7 +96,7 @@ require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', sat
 -- Choose accent color
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = 'yellow' })
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = 'blue' })
-require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = '#1B3C53' })
+require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = '#1b3c53' })
 ```
 
 ## Features

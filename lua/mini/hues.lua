@@ -241,7 +241,7 @@ end
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'yellow' })
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'cyan' })
 ---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = 'blue' })
----   setup({ background = '#11262d', foreground = '#c0c8cc', accent = '#1B3C53' })
+---   setup({ background = '#11262d', foreground = '#c0c8cc', accent = '#1b3c53' })
 --- <
 MiniHues.config = {
 -- **Required** base colors as '#rrggbb' hex strings

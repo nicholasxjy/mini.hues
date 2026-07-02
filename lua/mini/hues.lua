@@ -446,8 +446,9 @@ MiniHues.make_palette = function(config)
     res.accent     = fg
     res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = fg_lch.h })
   elseif vim.tbl_contains(H.accent_values, accent) then
-    res.accent     = H.oklch2hex({ l = fg_l, c = chroma, h = hues[accent] })
-    res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = hues[accent] })
+    local accent_h = ((H.accent_ref_hues[accent] + math.random(-14, 15)) % 360)
+    res.accent     = H.oklch2hex({ l = fg_l, c = chroma, h = accent_h })
+    res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = accent_h })
   else
     local accent_lch = H.hex2oklch(accent)
     res.accent     = H.oklch2hex({ l = fg_l, c = accent_lch.c, h = accent_lch.h })
@@ -1842,6 +1843,23 @@ H.accent_values = {
 	"indigo",
 	"purple",
 	"pink",
+}
+
+-- Reference hues (in degrees) for named accent colors on the 12-color wheel
+--stylua: ignore
+H.accent_ref_hues = {
+  red    =   0,
+  orange =  30,
+  yellow =  60,
+  lime   =  90,
+  green  = 120,
+  teal   = 150,
+  cyan   = 180,
+  azure  = 210,
+  blue   = 240,
+  indigo = 270,
+  purple = 300,
+  pink   = 330,
 }
 
 -- Cusps for Oklch color space. See 'mini.colors' for more details.

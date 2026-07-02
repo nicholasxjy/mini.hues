@@ -973,6 +973,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
     -- @tag
     hi('@tag.attribute', { link='@tag' })
+    hi('@tag.attributes', { fg=p.teal, bg=nil, italic=true })
     hi('@tag.delimiter', { link='@punctuation' })
     hi('@tag.tsx', { fg=p.cyan, bg=nil, bold=true })
   end

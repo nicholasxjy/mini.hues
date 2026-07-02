@@ -627,7 +627,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('WarningMsg',     { fg=p.yellow,  bg=nil })
   hi('Whitespace',     { fg=p.bg_mid2, bg=nil })
   hi('WildMenu',       { link='PmenuSel' })
-  hi('WinBar',         { link='StatusLine' })
+  hi('WinBar',         { fg=p.fg_mid,  bg=p.bg_edge })
   hi('WinBarNC',       { link='StatusLineNC' })
   hi('WinSeparator',   { fg=p.accent,  bg=nil })
 

@@ -446,7 +446,7 @@ MiniHues.make_palette = function(config)
     res.accent     = fg
     res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = fg_lch.h })
   elseif vim.tbl_contains(H.accent_values, accent) then
-    local accent_h = ((H.accent_ref_hues[accent] + math.random(-14, 15)) % 360)
+    local accent_h = (H.accent_ref_hues[accent] + math.random(-15, 14)) % 360
     res.accent     = H.oklch2hex({ l = fg_l, c = chroma, h = accent_h })
     res.accent_bg  = H.oklch2hex({ l = bg_l, c = chroma, h = accent_h })
   else

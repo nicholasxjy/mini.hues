@@ -1991,7 +1991,7 @@ H.validate_accent = function(x)
 		return x
 	end
 	local choices_string = table.concat(vim.tbl_map(vim.inspect, H.accent_values), ", ")
-	H.error('`accent` should be one of ' .. choices_string .. ' or hex color string in the form "#rrggbb"')
+	H.error('`accent` should be one of ' .. choices_string .. ' or a hex color string in the form "#rrggbb"')
 end
 
 -- Color conversion -----------------------------------------------------------

@@ -107,6 +107,7 @@ require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', acc
     - Number of hues used for non-base colors (from 0 to 12).
     - Saturation level ('low', 'lowmedium', 'medium', 'mediumhigh', 'high').
     - Accent color used for some selected UI elements (named preset or `#rrggbb`).
+    - Dimmed background for floating windows.
     - Plugin integration (can be selectively enabled for faster startup).
 
 - Random generator for base colors. Powers `randomhue` color scheme.
@@ -280,6 +281,9 @@ Stable branch:
 
   -- Whether to auto adjust highlight groups based on certain events
   autoadjust = true,
+
+  -- Whether to use dimmed background for floating windows
+  dim_popup = false,
 }
 ```
 

@@ -13,6 +13,7 @@
 ---     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
 ---     - Accent color used for some selected UI elements (named preset or
 ---       "#rrggbb").
+---     - Dimmed background for floating windows.
 ---     - Plugin integration (can be selectively enabled for faster startup).
 ---
 --- - Random generator for base colors. See |MiniHues.gen_random_base_colors()|.
@@ -265,6 +266,9 @@ foreground = nil,
 
 	-- Whether to auto adjust highlight groups based on certain events
 	autoadjust = true,
+
+	-- Whether to use dimmed background for floating windows
+	dim_popup = false,
 }
 --minidoc_afterlines_end
 
@@ -496,6 +500,8 @@ end
 ---@param opts table|nil Options. Possible fields:
 ---   - <autoadjust> - whether to auto adjust some highlight groups when needed.
 ---     Default: value of `autoadjust` in |MiniHues.config|.
+---   - <dim_popup> - whether to use dimmed background for floating windows.
+---     Default: value of `dim_popup` in |MiniHues.config|.
 ---
 ---@usage >lua
 ---   local palette = require('mini.hues').make_palette({
@@ -511,7 +517,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   if type(palette) ~= 'table' then H.error('`palette` should be table with palette colors.') end
   plugins = plugins or MiniHues.config.plugins
   if type(plugins) ~= 'table' then H.error('`plugins` should be table with plugin integrations data.') end
-  opts = vim.tbl_extend('force', { autoadjust = MiniHues.config.autoadjust }, opts or {})
+  opts = vim.tbl_extend('force', { autoadjust = MiniHues.config.autoadjust, dim_popup = MiniHues.config.dim_popup }, opts or {})
 
   palette = H.normalize_palette(palette)
   H.palette = vim.deepcopy(palette)
@@ -526,6 +532,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   vim.g.colors_name = nil
 
   local p, autoadjust = palette, opts.autoadjust
+  local popup_bg = opts.dim_popup and p.bg_edge or p.bg
   local heading_alpha = 0.5
   local heading_colors = {
     H.blend_hex(p.orange, p.bg, heading_alpha),
@@ -571,7 +578,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('Directory',      { fg=p.azure,   bg=nil })
   hi('EndOfBuffer',    { fg=p.bg_mid2, bg=nil })
   hi('ErrorMsg',       { fg=p.red,     bg=nil })
-  hi('FloatBorder',    { fg=p.accent,  bg=p.bg })
+  hi('FloatBorder',    { fg=p.accent,  bg=popup_bg })
   hi('FloatTitle',     { fg=p.accent,  bg=p.bg_edge2, bold=true })
   hi('FoldColumn',     { fg=p.bg_mid2, bg=nil })
   hi('Folded',         { fg=p.fg_mid2, bg=p.bg_edge })
@@ -587,7 +594,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('MsgSeparator',   H.attr_msgseparator(p, autoadjust))
   hi('NonText',        { fg=p.bg_mid2, bg=nil })
   hi('Normal',         { fg=p.fg,      bg=p.bg })
-  hi('NormalFloat',    { fg=p.fg,      bg=p.bg })
+  hi('NormalFloat',    { fg=p.fg,      bg=popup_bg })
   hi('NormalNC',       { link='Normal' })
   hi('OkMsg',          { fg=p.green,   bg=nil })
   hi('Pmenu',          H.attr_pmenu(p, autoadjust))
@@ -1877,6 +1884,7 @@ H.setup_config = function(config)
 	H.validate_accent(config.accent)
 	H.check_type("plugins", config.plugins, "table")
 	H.check_type("autoadjust", config.autoadjust, "boolean")
+	H.check_type("dim_popup", config.dim_popup, "boolean")
 
 	return config
 end
@@ -1885,7 +1893,7 @@ H.apply_config = function(config)
 	MiniHues.config = config
 
 	-- Apply palette
-	local opts = { autoadjust = config.autoadjust }
+	local opts = { autoadjust = config.autoadjust, dim_popup = config.dim_popup }
 	MiniHues.apply_palette(MiniHues.make_palette(config), config.plugins, opts)
 end
 

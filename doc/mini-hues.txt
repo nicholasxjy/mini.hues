@@ -15,6 +15,7 @@ Features:
     - Saturation level ("low", "lowmedium", "medium", "mediumhigh", "high").
     - Accent color used for some selected UI elements (named preset or
       "#rrggbb").
+    - Dimmed background for floating windows.
     - Plugin integration (can be selectively enabled for faster startup).
 
 - Random generator for base colors. See |MiniHues.gen_random_base_colors()|.
@@ -180,6 +181,9 @@ Defaults ~
 
     -- Whether to auto adjust highlight groups based on certain events
     autoadjust = true,
+
+    -- Whether to use dimmed background for floating windows
+    dim_popup = false,
   }
 <
 See |MiniHues.make_palette()| for more information about how certain settings
@@ -216,6 +220,11 @@ events relevant to them. Currently adjusted groups:
   If it results in a border - same as floating window (but with no accent
   foreground in border), otherwise - same as |hl-CursorLine|. This design
   makes |ins-completion-menu| stand out from regular floating windows.
+
+# Popup dimming ~
+
+`config.dim_popup` defines whether floating windows should use a dimmed
+background.
 
 # Examples ~
 *MiniHues-examples*

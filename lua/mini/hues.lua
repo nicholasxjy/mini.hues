@@ -1142,7 +1142,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('SnacksPickerGitStatusIgnored',   { link='Comment' })
     hi('SnacksPickerGitStatusUntracked', { link='Comment' })
     hi('SnacksPickerKeymapRhs',          { link='Comment' })
-    hi('SnacksPickerListCursorLine',     { fg=nil, bg=p.bg_mid, bold=true })
+    hi('SnacksPickerListCursorLine',     { fg=nil, bg=p.bg_mid })
     hi('SnacksPickerPathHidden',         { link='Comment' })
     hi('SnacksPickerPathIgnored',        { link='Comment' })
     hi('SnacksPickerTotals',             { link='Comment' })
@@ -1316,7 +1316,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 	hi('FzfLuaDirPart',    { link = 'SnacksPickerDir' })
     hi('FzfLuaFzfMatch',   { link = 'SnacksPickerMatch' })
 	hi('FzfLuaFzfBorder',  { fg=p.cyan, bg=p.bg })
-    hi('FzfLuaCursorLine', { fg=nil, bg=p.bg_mid2, bold=true })
+    hi('FzfLuaCursorLine', { fg=nil, bg=p.bg_mid2 })
   end
 
   if has_integration('justinmk/vim-sneak') then

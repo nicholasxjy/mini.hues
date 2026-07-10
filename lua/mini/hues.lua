@@ -1148,7 +1148,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('SnacksPickerTotals',             { link='Comment' })
     hi('SnacksPickerUnselected',         { link='Comment' })
 
-    hi("SnacksPickerMatch", { fg = p.accent, bg = opts.dim_popup and p.bg or p.bg_edge, bold = true, underline=true })
+    hi("SnacksPickerMatch", { fg = p.accent, bg = opts.dim_popup and p.bg or p.bg_edge, bold = true })
     hi("SnacksPickerTitle", { fg = p.yellow, bg = p.bg, bold = true })
     hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
     hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })

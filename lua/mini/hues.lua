@@ -1129,6 +1129,10 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('LazyH1',           { fg=p.accent, bg=p.bg_mid2, bold=true })
   end
 
+  if has_intergration('nicholasxjy/zed-bar.nvim') then
+    hi('ZedBarFile', { fg=p.bg_mid2, bg=p.bg_edge2 })
+  end
+
   if has_integration('folke/noice.nvim') then
     --typos: ignore
     hi('NoiceCmdlinePopupBorder', { fg=p.azure,  bg=nil })

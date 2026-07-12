@@ -936,7 +936,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('MiniClueDescSingle',          { fg=p.bg_mid2, bg=nil })
     hi('MiniClueNextKey',             { fg=p.accent, bg=nil, bold=true })
     hi('MiniClueNextKeyWithPostkeys', { fg=p.red, bg=nil, bold=true })
-    hi('MiniClueSeparator',           { link='DiagnosticFloatingInfo' })
+    hi('MiniClueSeparator',           { fg=p.blue, bg=nil })
     hi('MiniClueTitle',               { link='FloatTitle' })
 
     hi('MiniCmdlinePeekBorder', { link='FloatBorder' })

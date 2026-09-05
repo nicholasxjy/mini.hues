@@ -99,6 +99,38 @@ require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', acc
 require('mini.hues').setup({ background = '#002734', foreground = '#c0c8cc', accent = '#1b3c53' })
 ```
 
+## Highlight mapping
+
+The highlight roles are inspired by [TokyoNight](https://github.com/folke/tokyonight.nvim/tree/main/lua/tokyonight/groups).
+The hues palette, generation algorithm, configuration, bundled colors and terminal colors are unchanged.
+
+| Role | Palette color |
+| --- | --- |
+| Variables / ordinary text | `fg` |
+| Functions / methods | `azure` |
+| Types / operators / preprocessors | `cyan` |
+| Strings / characters | `green` |
+| Constants / numbers / booleans | `orange` |
+| Parameters | `yellow` |
+| Properties / members | `teal` |
+| Keywords | `purple` |
+| Control flow / function declarations | `pink` |
+| Built-in variables | `red` |
+| Comments / brackets | `fg_mid` |
+| Focused UI / search matches | `accent` |
+
+Tree-sitter, LSP semantic tokens and completion kinds share these roles. Headings and
+rainbow brackets use the original foreground colors without additional dimming.
+Selections use explicit readable foreground/background pairs; diagnostic undercurls
+and deprecated strikethroughs preserve the underlying syntax colors.
+
+Run `nvim --headless -u NONE -l tests/highlights.lua` to check the eight bundled
+dark/light palettes and 130 generated palettes (all hue counts and saturation levels,
+in both backgrounds, at base hue 225). The checked body, comment, selection and menu
+text pairs exceed the [4.5:1 contrast target](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
+This is not a blanket contrast guarantee: some unchanged saturated syntax colors in
+light palettes fall below 4.5:1, and custom palettes determine their own contrast.
+
 ## Features
 
 - Required to set two base colors: background and foreground. Their shades and other non-base colors are computed to be as much perceptually different as reasonably possible.

@@ -360,6 +360,12 @@ Create color scheme highlight groups and terminal colors based on supplied
 palette. This is useful if you want to tweak palette colors.
 For regular usage prefer |MiniHues.setup()|.
 
+Highlight roles follow TokyoNight using hues colors: functions are azure,
+types cyan, strings green, constants orange, parameters yellow, properties
+teal, keywords purple, and control flow pink. UI focus uses the accent.
+Headings and rainbow brackets use unmodified palette foreground colors.
+Contrast depends on the supplied palette; its colors are not adjusted.
+
 Parameters ~
 {palette} `(table)` Table with structure as |MiniHues.make_palette()| output.
 {plugins} `(table|nil)` Table with boolean values indicating whether to create

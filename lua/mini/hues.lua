@@ -452,46 +452,18 @@ MiniHues.make_palette = function(config)
 	return res
 end
 
-H.make_rainbow_delimiter_palette = function(p)
-local fg_edge2_l = H.hex2oklch(p.fg_edge2).l
-local fg_edge_l = H.hex2oklch(p.fg_edge).l
-local fg_l = H.hex2oklch(p.fg).l
-local fg_mid_l = H.hex2oklch(p.fg_mid).l
-local fg_mid2_l = H.hex2oklch(p.fg_mid2).l
-local chroma_scale = 1.15
-local lightness_scale = 0.6
-
-local target_lightness = {
-red = fg_edge2_l,
-cyan = fg_mid2_l,
-yellow = fg_edge_l,
-green = fg_mid_l,
-orange = 0.5 * (fg_edge_l + fg_l),
-violet = 0.5 * (fg_l + fg_mid_l),
-blue = fg_l,
-}
-
-local res = {}
---stylua: ignore
-local source = {
-red = p.red, cyan = p.cyan, yellow = p.yellow, green = p.green,
-orange = p.orange, violet = p.purple, blue = p.azure,
-}
-
-for name, color in pairs(source) do
-local lch = H.hex2oklch(color)
-res[name] = H.oklch2hex({ l = lightness_scale * target_lightness[name], c = chroma_scale * lch.c, h = lch.h })
-end
-
-return res
-end
-
 --stylua: ignore
 --- Apply palette
 ---
 --- Create color scheme highlight groups and terminal colors based on supplied
 --- palette. This is useful if you want to tweak palette colors.
 --- For regular usage prefer |MiniHues.setup()|.
+---
+--- Highlight roles follow TokyoNight using hues colors: functions are azure,
+--- types cyan, strings green, constants orange, parameters yellow, properties
+--- teal, keywords purple, and control flow pink. UI focus uses the accent.
+--- Headings and rainbow brackets use unmodified palette foreground colors.
+--- Contrast depends on the supplied palette; its colors are not adjusted.
 ---
 ---@param palette table Table with structure as |MiniHues.make_palette()| output.
 ---@param plugins table|nil Table with boolean values indicating whether to create
@@ -533,15 +505,8 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   local p, autoadjust = palette, opts.autoadjust
   local popup_bg = opts.dim_popup and p.bg_edge or p.bg
-  local heading_alpha = 0.5
-  local heading_colors = {
-    H.blend_hex(p.orange, p.bg, heading_alpha),
-    H.blend_hex(p.yellow, p.bg, heading_alpha),
-    H.blend_hex(p.lime,   p.bg, heading_alpha),
-    H.blend_hex(p.green,  p.bg, heading_alpha),
-    H.blend_hex(p.teal,   p.bg, heading_alpha),
-    H.blend_hex(p.blue,   p.bg, heading_alpha),
-  }
+  -- TokyoNight's semantic roles, using the original hues palette.
+  local heading_colors = { p.pink, p.azure, p.teal, p.yellow, p.purple, p.green }
   local hi = function(name, data) vim.api.nvim_set_hl(0, name, data) end
   local has_integration = function(name)
     local entry = plugins[name]
@@ -559,35 +524,35 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   -- - Align by commas.
 
   -- Builtin highlighting groups
-  hi('ColorColumn',    { fg=nil,       bg=p.bg_mid2 })
+  hi('ColorColumn',    { fg=nil,       bg=p.bg_edge })
   hi('ComplMatchIns',  { fg=nil,       bg=nil })
-  hi('Conceal',        { fg=p.azure,   bg=nil })
-  hi('CurSearch',      { fg=p.bg,      bg=p.yellow })
+  hi('Conceal',        { fg=p.fg_mid,  bg=nil })
+  hi('CurSearch',      { link='IncSearch' })
   hi('Cursor',         { fg=p.bg,      bg=p.fg })
   hi('CursorColumn',   { fg=nil,       bg=p.bg_mid })
   hi('CursorIM',       { link='Cursor' })
   hi('CursorLine',     { fg=nil,       bg=p.bg_mid })
   hi('CursorLineFold', { fg=p.bg_mid2, bg=nil })
-  hi('CursorLineNr',   { fg=p.accent,  bg=nil,       bold=true })
+  hi('CursorLineNr',   { fg=p.orange,  bg=nil,       bold=true })
   hi('CursorLineSign', { fg=p.bg_mid2, bg=nil })
   hi('DiffAdd',        { fg=nil,       bg=p.green_bg })
-  hi('DiffChange',     { fg=nil,       bg=p.teal_bg })
+  hi('DiffChange',     { fg=nil,       bg=p.blue_bg })
   hi('DiffDelete',     { fg=nil,       bg=p.red_bg })
-  hi('DiffText',       { fg=nil,       bg=p.yellow_bg })
+  hi('DiffText',       { fg=p.fg_edge, bg=p.bg_mid2, bold=true })
   hi('DiffTextAdd',    { link='DiffAdd' })
   hi('Directory',      { fg=p.azure,   bg=nil })
-  hi('EndOfBuffer',    { fg=p.bg_mid2, bg=nil })
+  hi('EndOfBuffer',    { fg=p.bg,      bg=nil })
   hi('ErrorMsg',       { fg=p.red,     bg=nil })
   hi('FloatBorder',    { fg=p.accent,  bg=popup_bg })
-  hi('FloatTitle',     { fg=p.accent,  bg=p.bg_edge2, bold=true })
+  hi('FloatTitle',     { fg=p.accent,  bg=popup_bg,  bold=true })
   hi('FoldColumn',     { fg=p.bg_mid2, bg=nil })
-  hi('Folded',         { fg=p.fg_mid2, bg=p.bg_edge })
-  hi('IncSearch',      { fg=p.bg,      bg=p.yellow })
+  hi('Folded',         { fg=p.azure,   bg=p.bg_edge })
+  hi('IncSearch',      { fg=p.bg,      bg=p.orange })
   hi('lCursor',        { fg=p.bg,      bg=p.fg })
-  hi('LineNr',         { fg=p.bg_mid2, bg=nil })
+  hi('LineNr',         { fg=p.fg_mid2, bg=nil })
   hi('LineNrAbove',    { link='LineNr' })
   hi('LineNrBelow',    { link='LineNr' })
-  hi('MatchParen',     { fg=nil,       bg=p.bg_mid2, bold=true })
+  hi('MatchParen',     { fg=p.orange,  bg=nil,       bold=true, underline=true })
   hi('ModeMsg',        { fg=p.green,   bg=nil })
   hi('MoreMsg',        { fg=p.azure,   bg=nil })
   hi('MsgArea',        { link='Normal' })
@@ -603,75 +568,75 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('PmenuExtraSel',  { link='PmenuSel' })
   hi('PmenuKind',      { link='Pmenu' })
   hi('PmenuKindSel',   { link='PmenuSel' })
-  hi('PmenuMatch',     { fg=nil,       bg=nil,       bold=true })
-  hi('PmenuMatchSel',  { fg=nil,       bg=nil,       bold=true,   blend=0, reverse=true })
+  hi('PmenuMatch',     { fg=p.accent,  bg=nil,       bold=true })
+  hi('PmenuMatchSel',  { fg=p.accent,  bg=p.bg_edge2, bold=true, blend=0 })
   hi('PmenuSbar',      { link='Pmenu' })
-  hi('PmenuSel',       { fg=nil,       bg=nil,       blend=0,     reverse=true })
+  hi('PmenuSel',       { fg=p.fg,      bg=p.bg_edge2, blend=0, bold=true })
   hi('PmenuThumb',     { fg=nil,       bg=p.bg_mid2 })
   hi('Question',       { fg=p.azure,   bg=nil })
-  hi('QuickFixLine',   { fg=nil,       bg=nil,       bold=true })
-  hi('Search',         { fg=p.bg,      bg=p.accent })
+  hi('QuickFixLine',   { fg=p.fg,      bg=p.bg_mid,  bold=true })
+  hi('Search',         { fg=p.fg,      bg=p.blue_bg })
   hi('SignColumn',     { fg=p.bg_mid2, bg=nil })
-  hi('SpecialKey',     { fg=p.accent,  bg=nil })
+  hi('SpecialKey',     { link='NonText' })
   hi('SpellBad',       { fg=nil,       bg=nil,       sp=p.red,    undercurl=true })
   hi('SpellCap',       { fg=nil,       bg=nil,       sp=p.teal,   undercurl=true })
   hi('SpellLocal',     { fg=nil,       bg=nil,       sp=p.yellow, undercurl=true })
   hi('SpellRare',      { fg=nil,       bg=nil,       sp=p.indigo, undercurl=true })
-  hi('StatusLine',     { fg=p.fg_mid,  bg=p.accent_bg })
+  hi('StatusLine',     { fg=p.fg,      bg=p.accent_bg })
   hi('StatusLineNC',   { fg=p.fg_mid,  bg=p.bg_edge })
   hi('StderrMsg',      { link='ErrorMsg' })
   hi('StdoutMsg',      { link='MsgArea' })
-  hi('Substitute',     { fg=p.bg,      bg=p.blue })
+  hi('Substitute',     { fg=p.bg,      bg=p.red })
   hi('TabLine',        { fg=p.fg_mid,  bg=p.bg_edge })
   hi('TabLineFill',    { link='Tabline' })
-  hi('TabLineSel',     { fg=p.accent,  bg=p.bg_edge })
+  hi('TabLineSel',     { fg=p.bg,      bg=p.accent,  bold=true })
   hi('TermCursor',     { fg=nil,       bg=nil,       reverse=true })
   hi('TermCursorNC',   { fg=nil,       bg=nil,       reverse=true })
-  hi('Title',          { fg=p.accent,  bg=nil })
-  hi('VertSplit',      { fg=p.accent,  bg=nil })
-  hi('Visual',         { fg=nil,       bg=p.bg_mid2 })
-  hi('VisualNOS',      { fg=nil,       bg=p.bg_mid })
+  hi('Title',          { fg=p.accent,  bg=nil,       bold=true })
+  hi('VertSplit',      { link='WinSeparator' })
+  hi('Visual',         { fg=p.fg_edge, bg=p.bg_mid2 })
+  hi('VisualNOS',      { link='Visual' })
   hi('WarningMsg',     { fg=p.yellow,  bg=nil })
   hi('Whitespace',     { fg=p.bg_mid2, bg=nil })
   hi('WildMenu',       { link='PmenuSel' })
   hi('WinBar',         { fg=p.fg_mid,  bg=p.bg_edge })
   hi('WinBarNC',       { link='StatusLineNC' })
-  hi('WinSeparator',   { fg=p.accent,  bg=nil })
+  hi('WinSeparator',   { fg=p.bg_mid2, bg=nil })
 
   -- Standard syntax (affects treesitter)
   hi('Boolean',        { link='Constant' })
-  hi('Character',      { link='Constant' })
-  hi('Comment',        { fg=p.fg_mid2, bg=nil, italic=true })
+  hi('Character',      { link='String' })
+  hi('Comment',        { fg=p.fg_mid,  bg=nil, italic=true })
   hi('Conditional',    { link='Statement' })
-  hi('Constant',       { fg=p.purple,  bg=nil })
-  hi('Debug',          { link='Special' })
+  hi('Constant',       { fg=p.orange,  bg=nil })
+  hi('Debug',          { link='Constant' })
   hi('Define',         { link='PreProc' })
-  hi('Delimiter',      { fg=p.orange,  bg=nil })
-  hi('Error',          { fg=nil,       bg=p.red_bg })
+  hi('Delimiter',      { fg=p.fg_mid,  bg=nil })
+  hi('Error',          { fg=p.red,     bg=nil })
   hi('Exception',      { link='Statement' })
   hi('Float',          { link='Number' })
   hi('Function',       { fg=p.azure,   bg=nil })
-  hi('Identifier',     { fg=p.yellow,  bg=nil })
+  hi('Identifier',     { fg=p.fg,      bg=nil })
   hi('Ignore',         { fg=nil,       bg=nil })
   hi('Include',        { link='PreProc' })
-  hi('Keyword',        { fg=p.accent,  bg=nil, bold=true })
-  hi('Label',          { link='Statement' })
+  hi('Keyword',        { fg=p.purple,  bg=nil })
+  hi('Label',          { fg=p.azure,   bg=nil })
   hi('Macro',          { link='PreProc' })
-  hi('Number',         { fg=p.pink,    bg=nil })
-  hi('Operator',       { fg=p.fg_mid2,      bg=nil })
+  hi('Number',         { link='Constant' })
+  hi('Operator',       { fg=p.cyan,    bg=nil })
   hi('PreCondit',      { link='PreProc' })
-  hi('PreProc',        { fg=p.indigo,  bg=nil })
+  hi('PreProc',        { fg=p.cyan,    bg=nil })
   hi('Repeat',         { link='Statement' })
-  hi('Special',        { fg=p.teal,    bg=nil })
+  hi('Special',        { fg=p.cyan,    bg=nil })
   hi('SpecialChar',    { link='Special' })
   hi('SpecialComment', { link='Special' })
-  hi('Statement',      { fg=p.fg,      bg=nil,         bold=true })
-  hi('StorageClass',   { link='Type' })
+  hi('Statement',      { fg=p.pink,    bg=nil })
+  hi('StorageClass',   { link='Keyword' })
   hi('String',         { fg=p.green,   bg=nil })
   hi('Structure',      { link='Type' })
-  hi('Tag',            { link='Special' })
-  hi('Todo',           { fg=p.accent,  bg=p.accent_bg, bold=true })
-  hi('Type',           { fg=p.fg,      bg=nil })
+  hi('Tag',            { link='Label' })
+  hi('Todo',           { fg=p.bg,      bg=p.yellow,  bold=true })
+  hi('Type',           { fg=p.cyan,    bg=nil })
   hi('Typedef',        { link='Type' })
 
   -- Other community standard
@@ -681,12 +646,12 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   -- Patch diff
   hi('diffAdded',   { fg=p.green,  bg=nil })
-  hi('diffChanged', { fg=p.teal,   bg=nil })
+  hi('diffChanged', { fg=p.blue,   bg=nil })
   hi('diffFile',    { fg=p.yellow, bg=nil })
   hi('diffLine',    { fg=p.blue,   bg=nil })
   hi('diffRemoved', { fg=p.red,    bg=nil })
   hi('Added',       { fg=p.green,  bg=nil })
-  hi('Changed',     { fg=p.teal,   bg=nil })
+  hi('Changed',     { link='diffChanged' })
   hi('Removed',     { fg=p.red,    bg=nil })
 
   -- Git commit
@@ -728,17 +693,17 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('DiagnosticOk',    { fg=p.green,  bg=nil })
   hi('DiagnosticWarn',  { fg=p.yellow, bg=nil })
 
-  hi('DiagnosticUnderlineError', { fg=nil, bg=nil, sp=p.red,    underline=true })
-  hi('DiagnosticUnderlineHint',  { fg=nil, bg=nil, sp=p.teal,   underline=true })
-  hi('DiagnosticUnderlineInfo',  { fg=nil, bg=nil, sp=p.blue,   underline=true })
-  hi('DiagnosticUnderlineOk',    { fg=nil, bg=nil, sp=p.green,  underline=true })
-  hi('DiagnosticUnderlineWarn',  { fg=nil, bg=nil, sp=p.yellow, underline=true })
+  hi('DiagnosticUnderlineError', { fg=nil, bg=nil, sp=p.red, undercurl=true })
+  hi('DiagnosticUnderlineHint',  { fg=nil, bg=nil, sp=p.teal, undercurl=true })
+  hi('DiagnosticUnderlineInfo',  { fg=nil, bg=nil, sp=p.blue, undercurl=true })
+  hi('DiagnosticUnderlineOk',    { fg=nil, bg=nil, sp=p.green, undercurl=true })
+  hi('DiagnosticUnderlineWarn',  { fg=nil, bg=nil, sp=p.yellow, undercurl=true })
 
-  hi('DiagnosticFloatingError', { fg=p.red,    bg=p.bg_edge })
-  hi('DiagnosticFloatingHint',  { fg=p.teal,   bg=p.bg_edge })
-  hi('DiagnosticFloatingInfo',  { fg=p.blue,   bg=p.bg_edge })
-  hi('DiagnosticFloatingOk',    { fg=p.green,  bg=p.bg_edge })
-  hi('DiagnosticFloatingWarn',  { fg=p.yellow, bg=p.bg_edge })
+  hi('DiagnosticFloatingError', { fg=p.red, bg=popup_bg })
+  hi('DiagnosticFloatingHint',  { fg=p.teal, bg=popup_bg })
+  hi('DiagnosticFloatingInfo',  { fg=p.blue, bg=popup_bg })
+  hi('DiagnosticFloatingOk',    { fg=p.green, bg=popup_bg })
+  hi('DiagnosticFloatingWarn',  { fg=p.yellow, bg=popup_bg })
 
   hi('DiagnosticVirtualTextError', { link='DiagnosticError' })
   hi('DiagnosticVirtualTextWarn',  { link='DiagnosticWarn' })
@@ -760,8 +725,9 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('LspReferenceRead',  { link='LspReferenceText' })
   hi('LspReferenceWrite', { link='LspReferenceText' })
 
-  hi('LspSignatureActiveParameter', { link='LspReferenceText' })
+  hi('LspSignatureActiveParameter', { fg=p.yellow, bg=nil, bold=true, underline=true })
 
+  hi('LspInlayHint',         { link='Comment' })
   hi('LspCodeLens',          { link='Comment' })
   hi('LspCodeLensSeparator', { link='Comment' })
 
@@ -779,23 +745,23 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   -- Tree-sitter. Source: `:h treesitter-highlight-groups`.
   hi('@variable',                   { fg=p.fg,   bg=nil })
-  hi('@variable.builtin',           { link='Special' })
-  hi('@variable.parameter',         { fg=p.blue, bg=nil })
-  hi('@variable.parameter.builtin', { link='@variable.builtin' })
-  hi('@variable.member',            { link='Identifier' })
+  hi('@variable.builtin',           { fg=p.red, bg=nil })
+  hi('@variable.parameter',         { fg=p.yellow, bg=nil })
+  hi('@variable.parameter.builtin', { link='@variable.parameter' })
+  hi('@variable.member',            { link='@property' })
 
   hi('@constant',         { link='Constant' })
   hi('@constant.builtin', { link='Special' })
   hi('@constant.macro',   { link='Macro' })
 
-  hi('@module',         { link='Identifier' })
+  hi('@module',         { link='Include' })
   hi('@module.builtin', { link='@variable.builtin' })
   hi('@label',          { link='Label' })
 
   hi('@string',                { link='String' })
-  hi('@string.documentation',  { link='@string' })
-  hi('@string.regexp',         { link='SpecialChar' })
-  hi('@string.escape',         { link='SpecialChar' })
+  hi('@string.documentation',  { fg=p.yellow, bg=nil })
+  hi('@string.regexp',         { fg=p.teal, bg=nil })
+  hi('@string.escape',         { fg=p.pink, bg=nil })
   hi('@string.special',        { link='SpecialChar' })
   hi('@string.special.symbol', { link='@constant' })
   hi('@string.special.path',   { link='Directory' })
@@ -809,12 +775,12 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@number.float', { link='Float' })
 
   hi('@type',            { link='Type' })
-  hi('@type.builtin',    { link='Special' })
+  hi('@type.builtin',    { link='Type' })
   hi('@type.definition', { link='Typedef' })
 
-  hi('@attribute',         { link='Macro' })
+  hi('@attribute',         { link='PreProc' })
   hi('@attribute.builtin', { link='Special' })
-  hi('@property',          { link='Identifier' })
+  hi('@property',          { fg=p.teal, bg=nil })
 
   hi('@function',         { link='Function' })
   hi('@function.builtin', { link='Special' })
@@ -824,29 +790,29 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@function.method',      { link='Function' })
   hi('@function.method.call', { link='Function' })
 
-  hi('@constructor', { link='Special' })
+  hi('@constructor', { fg=p.pink, bg=nil })
   hi('@operator',    { link='Operator' })
 
   hi('@keyword',           { link='Keyword' })
   hi('@keyword.coroutine', { link='@keyword' })
-  hi('@keyword.function',  { link='@keyword' })
-  hi('@keyword.operator',  { link='@keyword' })
-  hi('@keyword.import',    { fg=p.indigo, bg=nil, bold=true })
+  hi('@keyword.function',  { link='Statement' })
+  hi('@keyword.operator',  { link='Operator' })
+  hi('@keyword.import',    { link='Include' })
   hi('@keyword.type',      { link='@keyword' })
   hi('@keyword.modifier',  { link='@keyword' })
-  hi('@keyword.repeat',    { link='@keyword' })
-  hi('@keyword.return',    { fg=p.orange, bg=nil, bold=true })
-  hi('@keyword.debug',     { fg=p.teal,   bg=nil, bold=true })
-  hi('@keyword.exception', { link='@keyword' })
+  hi('@keyword.repeat',    { link='Repeat' })
+  hi('@keyword.return',    { link='Keyword' })
+  hi('@keyword.debug',     { link='Debug' })
+  hi('@keyword.exception', { link='Exception' })
 
-  hi('@keyword.conditional',         { link='@keyword' })
-  hi('@keyword.conditional.ternary', { link='@keyword' })
+  hi('@keyword.conditional',         { link='Conditional' })
+  hi('@keyword.conditional.ternary', { link='Conditional' })
 
-  hi('@keyword.directive',        { fg=p.indigo, bg=nil, bold=true })
+  hi('@keyword.directive',        { link='PreProc' })
   hi('@keyword.directive.define', { link='@keyword.directive' })
 
-  hi('@punctuation.delimiter', { link='Delimiter' })
-  hi('@punctuation.bracket',   { link='@punctuation.delimiter' })
+  hi('@punctuation.delimiter', { link='Operator' })
+  hi('@punctuation.bracket',   { link='Delimiter' })
   hi('@punctuation.special',   { link='Special' })
 
   hi('@comment',               { link='Comment' })
@@ -862,7 +828,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@markup.strikethrough', { fg=nil, bg=nil, strikethrough=true })
   hi('@markup.underline',     { fg=nil, bg=nil, underline=true })
 
-  hi('@markup.heading', { link = '@text.title' })
+  hi('@markup.heading', { link='Title' })
   hi('@markup.heading.1', { fg=heading_colors[1],bg=nil, bold = true })
   hi('@markup.heading.2', { fg=heading_colors[2],bg=nil, bold = true })
   hi('@markup.heading.3', { fg=heading_colors[3],bg=nil, bold = true })
@@ -873,11 +839,11 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@markup.quote',       { link='@string.special' })
   hi('@markup.math',        { link='@string.special' })
 
-  hi('@markup.link',       { link='Identifier' })
+  hi('@markup.link',       { fg=p.teal, bg=nil })
   hi('@markup.link.label', { link='@markup.link' })
-  hi('@markup.link.url',   { fg=p.fg, bg=nil, underline=true })
+  hi('@markup.link.url',   { fg=p.azure, bg=nil, underline=true })
 
-  hi('@markup.raw',       { link='Special' })
+  hi('@markup.raw',       { link='String' })
   hi('@markup.raw.block', { link='@markup.raw' })
 
   hi('@markup.list',           { link='@punctuation.special' })
@@ -890,9 +856,9 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   hi('@tag',           { link='Tag' })
   hi('@tag.builtin',   { link='Special' })
-  hi('@tag.attribute', { fg=p.teal, bg=nil, italic=true })
+  hi('@tag.attribute', { link='@property' })
   hi('@tag.delimiter', { link='Delimiter' })
-  hi('@tag.tsx', { fg=p.cyan, bg=nil, bold=true })
+  hi('@tag.tsx', { fg=p.red, bg=nil })
 
   hi('@none', {})
 
@@ -904,8 +870,9 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@string.special.vimdoc',             { link='@constant' })
 
   -- Semantic tokens. Source: `:h lsp-semantic-highlight`.
+  -- Generic variable/defaultLibrary tokens must not erase Tree-sitter roles.
   hi('@lsp.type.class',         { link='Structure' })
-  hi('@lsp.type.decorator',     { link='@function' })
+  hi('@lsp.type.decorator',     { link='@attribute' })
   hi('@lsp.type.enum',          { link='@type' })
   hi('@lsp.type.enumMember',    { link='@constant' })
   hi('@lsp.type.function',      { link='@function' })
@@ -918,11 +885,22 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   hi('@lsp.type.struct',        { link='Structure' })
   hi('@lsp.type.type',          { link='@type' })
   hi('@lsp.type.typeParameter', { link='@type.definition' })
-  hi('@lsp.type.variable',      { link='@variable' })
+  hi('@lsp.type.variable',      {})
   hi('@lsp.type.modifier',      { link='@keyword.modifier' })
 
-  hi('@lsp.mod.defaultLibrary', { link='Special' })
-  hi('@lsp.mod.deprecated',     { fg=p.red, bg=nil, strikethrough=true })
+  hi('@lsp.type.boolean',      { link='@boolean' })
+  hi('@lsp.type.keyword',      { link='@keyword' })
+  hi('@lsp.type.number',       { link='@number' })
+  hi('@lsp.type.operator',     { link='@operator' })
+  hi('@lsp.type.string',       { link='@string' })
+
+  hi('@lsp.typemod.class.defaultLibrary',    { link='@type.builtin' })
+  hi('@lsp.typemod.function.defaultLibrary', { link='@function.builtin' })
+  hi('@lsp.typemod.method.defaultLibrary',   { link='@function.builtin' })
+  hi('@lsp.typemod.variable.defaultLibrary', { link='@variable.builtin' })
+
+  hi('@lsp.mod.defaultLibrary', {})
+  hi('@lsp.mod.deprecated',     { link='DiagnosticDeprecated' })
 
   -- Plugins
   -- nvim-mini/mini.nvim
@@ -1130,7 +1108,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration('nicholasxjy/zed-bar.nvim') then
-    hi('ZedBarFile', { fg=p.bg_mid2, bg=p.bg_edge2 })
+    hi('ZedBarFile', { fg=p.fg_mid, bg=p.bg_edge2 })
   end
 
   if has_integration('folke/noice.nvim') then
@@ -1142,7 +1120,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   if has_integration('folke/snacks.nvim') then
     hi('SnacksPickerBufFlags', { link = 'Comment' })
-    hi('SnacksPickerDir',                { fg=p.bg_mid2, bg=p.bg_edge2 })
+    hi('SnacksPickerDir',                { link='Comment' })
     hi('SnacksPickerGitStatusIgnored',   { link='Comment' })
     hi('SnacksPickerGitStatusUntracked', { link='Comment' })
     hi('SnacksPickerKeymapRhs',          { link='Comment' })
@@ -1152,20 +1130,20 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('SnacksPickerTotals',             { link='Comment' })
     hi('SnacksPickerUnselected',         { link='Comment' })
 
-    hi("SnacksPickerMatch", { fg = p.accent, bg = opts.dim_popup and p.bg or p.bg_edge, bold = true })
-    hi("SnacksPickerTitle", { fg = p.yellow, bg = p.bg, bold = true })
-    hi("SnacksPickerPreviewTitle", { fg = p.blue, bg = p.bg, bold = true })
-    hi("SnacksPickerInputTitle", { fg = p.red, bg = p.bg, bold = true })
-    hi("SnacksPickerBoxTitle", { fg = p.red, bg = p.bg, bold = true })
-    hi("SnacksPickerListTitle", { fg = p.green, bg = p.bg, bold = true })
+    hi("SnacksPickerMatch", { link="PmenuMatch" })
+    hi("SnacksPickerTitle", { link="FloatTitle" })
+    hi("SnacksPickerPreviewTitle", { link="FloatTitle" })
+    hi("SnacksPickerInputTitle", { link="FloatTitle" })
+    hi("SnacksPickerBoxTitle", { link="FloatTitle" })
+    hi("SnacksPickerListTitle", { link="FloatTitle" })
 
-    hi("SnacksPickerPreviewBorder", { fg = p.blue, bg = p.bg })
-    hi("SnacksPickerListBorder", { fg = p.green, bg = p.bg })
-    hi("SnacksPickerBoxBorder", { fg = p.accent, bg = p.bg })
-    hi("SnacksPickerInputBorder", { fg = p.lime, bg = p.bg })
-    hi("SnacksPickerInput", { fg=p.accent, bg=p.bg, bold=true })
-    hi("SnacksPickerInputPrompt", { fg=p.accent, bg=p.bg, bold=true })
-    hi("SnacksPickerPreview", { bg=p.bg })
+    hi("SnacksPickerPreviewBorder", { link="FloatBorder" })
+    hi("SnacksPickerListBorder", { link="FloatBorder" })
+    hi("SnacksPickerBoxBorder", { link="FloatBorder" })
+    hi("SnacksPickerInputBorder", { link="FloatBorder" })
+    hi("SnacksPickerInput", { link="NormalFloat" })
+    hi("SnacksPickerInputPrompt", { fg=p.accent, bg=popup_bg, bold=true })
+    hi("SnacksPickerPreview", { link="NormalFloat" })
 
   end
 
@@ -1194,7 +1172,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('WhichKey',          { fg=p.cyan,  bg=p.bg })
     hi('WhichKeyBorder',    { link='FloatBorder' })
     hi('WhichKeyDesc',      { fg=p.fg,    bg=nil })
-    hi('WhichKeyFloat',     { fg=p.fg,    bg=p.bg_edge })
+    hi('WhichKeyFloat',     { link='NormalFloat' })
     hi('WhichKeyGroup',     { fg=p.red,   bg=nil })
     hi('WhichKeySeparator', { fg=p.green, bg=nil })
     hi('WhichKeyValue',     { link='Comment' })
@@ -1257,49 +1235,48 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration('HiPhish/rainbow-delimiters.nvim') then
-    local rainbow_p = H.make_rainbow_delimiter_palette(p)
-    hi('RainbowDelimiterRed',    { fg=rainbow_p.red,    bg=nil })
-    hi('RainbowDelimiterCyan',   { fg=rainbow_p.cyan,   bg=nil })
-    hi('RainbowDelimiterYellow', { fg=rainbow_p.yellow, bg=nil })
-    hi('RainbowDelimiterGreen',  { fg=rainbow_p.green,  bg=nil })
-    hi('RainbowDelimiterOrange', { fg=rainbow_p.orange, bg=nil })
-    hi('RainbowDelimiterViolet', { fg=rainbow_p.violet, bg=nil })
-    hi('RainbowDelimiterBlue',   { fg=rainbow_p.blue,   bg=nil })
+    hi('RainbowDelimiterRed',    { fg=p.red,    bg=nil })
+    hi('RainbowDelimiterCyan',   { fg=p.cyan,   bg=nil })
+    hi('RainbowDelimiterYellow', { fg=p.yellow, bg=nil })
+    hi('RainbowDelimiterGreen',  { fg=p.green,  bg=nil })
+    hi('RainbowDelimiterOrange', { fg=p.orange, bg=nil })
+    hi('RainbowDelimiterViolet', { fg=p.purple, bg=nil })
+    hi('RainbowDelimiterBlue',   { fg=p.azure,   bg=nil })
   end
 
   if has_integration('hrsh7th/nvim-cmp') then
     hi('CmpItemAbbr',           { fg=p.fg, bg=nil })
-    hi('CmpItemAbbrDeprecated', { link='Comment' })
-    hi('CmpItemAbbrMatch',      { fg=nil,  bg=nil, bold=true })
-    hi('CmpItemAbbrMatchFuzzy', { fg=nil,  bg=nil, bold=true })
+    hi('CmpItemAbbrDeprecated', { link='DiagnosticDeprecated' })
+    hi('CmpItemAbbrMatch',      { link='PmenuMatch' })
+    hi('CmpItemAbbrMatchFuzzy', { link='CmpItemAbbrMatch' })
     hi('CmpItemKind',           { fg=p.fg, bg=nil })
-    hi('CmpItemMenu',           { fg=p.fg, bg=nil })
+    hi('CmpItemMenu',           { fg=p.fg_mid, bg=nil })
 
     hi('CmpItemKindClass',         { link='Type' })
     hi('CmpItemKindColor',         { link='Special' })
     hi('CmpItemKindConstant',      { link='Constant' })
-    hi('CmpItemKindConstructor',   { link='Type' })
+    hi('CmpItemKindConstructor',   { link='@constructor' })
     hi('CmpItemKindEnum',          { link='Structure' })
-    hi('CmpItemKindEnumMember',    { link='Structure' })
+    hi('CmpItemKindEnumMember',    { link='Constant' })
     hi('CmpItemKindEvent',         { link='Exception' })
-    hi('CmpItemKindField',         { link='Structure' })
+    hi('CmpItemKindField',         { link='@property' })
     hi('CmpItemKindFile',          { link='Tag' })
     hi('CmpItemKindFolder',        { link='Directory' })
     hi('CmpItemKindFunction',      { link='Function' })
     hi('CmpItemKindInterface',     { link='Structure' })
     hi('CmpItemKindKeyword',       { link='Keyword' })
     hi('CmpItemKindMethod',        { link='Function' })
-    hi('CmpItemKindModule',        { link='Structure' })
+    hi('CmpItemKindModule',        { link='@module' })
     hi('CmpItemKindOperator',      { link='Operator' })
-    hi('CmpItemKindProperty',      { link='Structure' })
+    hi('CmpItemKindProperty',      { link='@property' })
     hi('CmpItemKindReference',     { link='Tag' })
     hi('CmpItemKindSnippet',       { link='Special' })
     hi('CmpItemKindStruct',        { link='Structure' })
     hi('CmpItemKindText',          { link='Normal' })
     hi('CmpItemKindTypeParameter', { link='Type' })
     hi('CmpItemKindUnit',          { link='Special' })
-    hi('CmpItemKindValue',         { link='Identifier' })
-    hi('CmpItemKindVariable',      { link='Delimiter' })
+    hi('CmpItemKindValue',         { link='Constant' })
+    hi('CmpItemKindVariable',      { link='@variable' })
   end
 
   if has_integration('ibhagwan/fzf-lua') then
@@ -1314,12 +1291,12 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('FzfLuaTabMarker',  { link='DiagnosticHint' })
     hi('FzfLuaTabTitle',   { link='Title' })
     hi('FzfLuaTitle',      { link='FloatTitle' })
-	hi('FzfLuaBorder',     { fg=p.yellow, bg=p.bg })
-	hi('FzfLuaPreviewBorder', { fg=p.green, bg=p.bg })
-    hi('FzfLuaPreviewNormal', { bg=p.bg })
-	hi('FzfLuaDirPart',    { link = 'SnacksPickerDir' })
-    hi('FzfLuaFzfMatch',   { link = 'SnacksPickerMatch' })
-	hi('FzfLuaFzfBorder',  { fg=p.cyan, bg=p.bg })
+	hi('FzfLuaBorder',     { link='FloatBorder' })
+	hi('FzfLuaPreviewBorder', { link='FloatBorder' })
+    hi('FzfLuaPreviewNormal', { link='NormalFloat' })
+	hi('FzfLuaDirPart',    { link='Comment' })
+    hi('FzfLuaFzfMatch',   { link='PmenuMatch' })
+	hi('FzfLuaFzfBorder',  { link='FloatBorder' })
     hi('FzfLuaCursorLine', { fg=nil, bg=p.bg_mid2 })
   end
 
@@ -1341,16 +1318,16 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   if has_integration('lewis6991/gitsigns.nvim') then
     hi('GitSignsAdd',             { fg=p.green,  bg=nil })
-    hi('GitSignsAddLn',           { link='GitSignsAdd' })
-    hi('GitSignsAddInline',       { link='GitSignsAdd' })
+    hi('GitSignsAddLn',           { link='DiffAdd' })
+    hi('GitSignsAddInline',       { link='DiffAdd' })
 
-    hi('GitSignsChange',          { fg=p.yellow, bg=nil })
-    hi('GitSignsChangeLn',        { link='GitSignsChange' })
-    hi('GitSignsChangeInline',    { link='GitSignsChange' })
+    hi('GitSignsChange',          { link='Changed' })
+    hi('GitSignsChangeLn',        { link='DiffChange' })
+    hi('GitSignsChangeInline',    { link='DiffText' })
 
     hi('GitSignsDelete',          { fg=p.red,    bg=nil })
-    hi('GitSignsDeleteLn',        { link='GitSignsDelete' })
-    hi('GitSignsDeleteInline',    { link='GitSignsDelete' })
+    hi('GitSignsDeleteLn',        { link='DiffDelete' })
+    hi('GitSignsDeleteInline',    { link='DiffDelete' })
 
     hi('GitSignsUntracked',       { fg=p.azure,  bg=nil })
     hi('GitSignsUntrackedLn',     { link='GitSignsUntracked' })
@@ -1377,17 +1354,17 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('RenderMarkdownCode',       { fg=nil,      bg=p.bg_edge })
     hi('RenderMarkdownCodeInline', { fg=nil,      bg=p.bg_edge })
     hi('RenderMarkdownDash',       { fg=p.accent, bg=nil })
-    hi('RenderMarkdownH1',         { fg=heading_colors[1], bg=nil, bold=true })
+    hi('RenderMarkdownH1',         { link='@markup.heading.1' })
     hi('RenderMarkdownH1Bg',       { fg=nil,      bg=nil })
-    hi('RenderMarkdownH2',         { fg=heading_colors[2], bg=nil, bold=true })
+    hi('RenderMarkdownH2',         { link='@markup.heading.2' })
     hi('RenderMarkdownH2Bg',       { fg=nil,      bg=nil })
-    hi('RenderMarkdownH3',         { fg=heading_colors[3],   bg=nil, bold=true })
+    hi('RenderMarkdownH3',         { link='@markup.heading.3' })
     hi('RenderMarkdownH3Bg',       { fg=nil,      bg=nil })
-    hi('RenderMarkdownH4',         { fg=heading_colors[4],  bg=nil, bold=true })
+    hi('RenderMarkdownH4',         { link='@markup.heading.4' })
     hi('RenderMarkdownH4Bg',       { fg=nil,      bg=nil })
-    hi('RenderMarkdownH5',         { fg=heading_colors[5],   bg=nil, bold=true })
+    hi('RenderMarkdownH5',         { link='@markup.heading.5' })
     hi('RenderMarkdownH5Bg',       { fg=nil,      bg=nil })
-    hi('RenderMarkdownH6',         { fg=heading_colors[6],   bg=nil, bold=true })
+    hi('RenderMarkdownH6',         { link='@markup.heading.6' })
     hi('RenderMarkdownH6Bg',       { fg=nil,      bg=nil })
     hi('RenderMarkdownTodo',       { link='Todo' })
     hi('RenderMarkdownUnchecked',  { link='DiagnosticWarn' })
@@ -1398,7 +1375,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('CocDisabled',             { link='Comment' })
     hi('CocFadeOut',              { link='Comment' })
     hi('CocMarkdownLink',         { fg=p.blue,   bg=nil })
-    hi('CocMenuSel',              { fg=nil,      bg=p.bg_mid2 })
+    hi('CocMenuSel',              { link='PmenuSel' })
     hi('CocNotificationProgress', { link='CocMarkdownLink' })
     hi('CocPumVirtualText',       { link='CocMarkdownLink' })
     hi('CocSearch',               { fg=p.blue,   bg=nil })
@@ -1431,7 +1408,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('NeoTreeGitAdded',             { fg=p.green,   bg=nil })
     hi('NeoTreeGitConflict',          { fg=p.orange,  bg=nil, bold=true })
     hi('NeoTreeGitDeleted',           { fg=p.red,     bg=nil })
-    hi('NeoTreeGitModified',          { fg=p.yellow,  bg=nil })
+    hi('NeoTreeGitModified',          { link='Changed' })
     hi('NeoTreeGitUnstaged',          { fg=p.purple,  bg=nil })
     hi('NeoTreeGitUntracked',         { fg=p.cyan,    bg=nil })
     hi('NeoTreeMessage',              { fg=p.fg,      bg=p.bg_mid })
@@ -1443,9 +1420,9 @@ MiniHues.apply_palette = function(palette, plugins, opts)
   end
 
   if has_integration('nvim-telescope/telescope.nvim') then
-    hi('TelescopeBorder',         { fg=p.accent, bg=nil })
-    hi('TelescopeMatching',       { fg=nil,      bg=nil, bold=true })
-    hi('TelescopeMultiSelection', { fg=nil,      bg=p.bg_mid2 })
+    hi('TelescopeBorder',         { link='FloatBorder' })
+    hi('TelescopeMatching',       { link='PmenuMatch' })
+    hi('TelescopeMultiSelection', { link='Visual' })
     hi('TelescopeSelection',      { fg=nil,      bg=p.bg_mid })
   end
 
@@ -1453,7 +1430,7 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('NvimTreeExecFile',     { fg=p.green,   bg=nil,       bold=true })
     hi('NvimTreeFolderIcon',   { fg=p.fg_mid2, bg=nil })
     hi('NvimTreeGitDeleted',   { fg=p.red,     bg=nil })
-    hi('NvimTreeGitDirty',     { fg=p.yellow,  bg=nil })
+    hi('NvimTreeGitDirty',     { link='Changed' })
     hi('NvimTreeGitMerge',     { fg=p.orange,  bg=nil })
     hi('NvimTreeGitNew',       { fg=p.cyan,    bg=nil })
     hi('NvimTreeGitRenamed',   { fg=p.purple,  bg=nil })
@@ -1633,9 +1610,15 @@ MiniHues.apply_palette = function(palette, plugins, opts)
 
   if has_integration("saghen/blink.cmp") then
     hi("BlinkCmpMenu", { link="NormalFloat" })
-	  hi("BlinkCmpLabelDeprecated", {fg=p.bg_mid2, bg=nil, strikethrough=true })
-    hi("BlinkCmpLabelDescription", {fg=p.bg_mid2, bg=p.bg_edge })
-    hi("BlinkCmpLabelDetail", { fg=p.bg_mid2, bg=p.bg_edge })
+    hi("BlinkCmpMenuSelection", { link="PmenuSel" })
+    hi("BlinkCmpLabel", { fg=p.fg, bg=nil })
+    hi("BlinkCmpLabelMatch", { link="PmenuMatch" })
+    hi("BlinkCmpDoc", { link="NormalFloat" })
+    hi("BlinkCmpSignatureHelp", { link="NormalFloat" })
+    hi("BlinkCmpSignatureHelpActiveParameter", { link="LspSignatureActiveParameter" })
+	  hi("BlinkCmpLabelDeprecated", { link="DiagnosticDeprecated" })
+    hi("BlinkCmpLabelDescription", { link="Comment" })
+    hi("BlinkCmpLabelDetail", { link="Comment" })
     hi("BlinkCmpMenuBorder", { link = "FloatBorder" })
     hi("BlinkCmpDocBorder", { fg = p.pink, bg = popup_bg })
     hi("BlinkCmpSignatureHelpBorder", { fg=p.green,bg=popup_bg })
@@ -1643,46 +1626,44 @@ MiniHues.apply_palette = function(palette, plugins, opts)
     hi('BlinkCmpKindClass',         { link='Type' })
     hi('BlinkCmpKindColor',         { link='Special' })
     hi('BlinkCmpKindConstant',      { link='Constant' })
-    hi('BlinkCmpKindConstructor',   { link='Type' })
+    hi('BlinkCmpKindConstructor',   { link='@constructor' })
     hi('BlinkCmpKindEnum',          { link='Structure' })
-    hi('BlinkCmpKindEnumMember',    { link='Structure' })
+    hi('BlinkCmpKindEnumMember',    { link='Constant' })
     hi('BlinkCmpKindEvent',         { link='Exception' })
-    hi('BlinkCmpKindField',         { link='Structure' })
+    hi('BlinkCmpKindField',         { link='@property' })
     hi('BlinkCmpKindFile',          { link='Tag' })
     hi('BlinkCmpKindFolder',        { link='Directory' })
     hi('BlinkCmpKindFunction',      { link='Function' })
     hi('BlinkCmpKindInterface',     { link='Structure' })
     hi('BlinkCmpKindKeyword',       { link='Keyword' })
     hi('BlinkCmpKindMethod',        { link='Function' })
-    hi('BlinkCmpKindModule',        { link='Structure' })
+    hi('BlinkCmpKindModule',        { link='@module' })
     hi('BlinkCmpKindOperator',      { link='Operator' })
-    hi('BlinkCmpKindProperty',      { link='Structure' })
+    hi('BlinkCmpKindProperty',      { link='@property' })
     hi('BlinkCmpKindReference',     { link='Tag' })
     hi('BlinkCmpKindSnippet',       { link='Special' })
     hi('BlinkCmpKindStruct',        { link='Structure' })
     hi('BlinkCmpKindText',          { link='Normal' })
     hi('BlinkCmpKindTypeParameter', { link='Type' })
     hi('BlinkCmpKindUnit',          { link='Special' })
-    hi('BlinkCmpKindValue',         { link='Identifier' })
-    hi('BlinkCmpKindVariable',      { link='Delimiter' })
+    hi('BlinkCmpKindValue',         { link='Constant' })
+    hi('BlinkCmpKindVariable',      { link='@variable' })
 
-    local rainbow_p = H.make_rainbow_delimiter_palette(p)
+    hi('BlinkPairsBlue',   { fg=p.azure,   bg=nil })
+    hi('BlinkPairsCyan',   { fg=p.cyan,   bg=nil })
+    hi('BlinkPairsGreen',  { fg=p.green,  bg=nil })
+    hi('BlinkPairsOrange', { fg=p.orange, bg=nil })
+    hi('BlinkPairsRed',    { fg=p.red,    bg=nil })
+    hi('BlinkPairsViolet', { fg=p.purple, bg=nil })
+    hi('BlinkPairsYellow', { fg=p.yellow, bg=nil })
 
-    hi('BlinkPairsBlue',   { fg=rainbow_p.blue,   bg=nil })
-    hi('BlinkPairsCyan',   { fg=rainbow_p.cyan,   bg=nil })
-    hi('BlinkPairsGreen',  { fg=rainbow_p.green,  bg=nil })
-    hi('BlinkPairsOrange', { fg=rainbow_p.orange, bg=nil })
-    hi('BlinkPairsRed',    { fg=rainbow_p.red,    bg=nil })
-    hi('BlinkPairsViolet', { fg=rainbow_p.violet, bg=nil })
-    hi('BlinkPairsYellow', { fg=rainbow_p.yellow, bg=nil })
-
-    hi('BlinkIndentBlue',   { fg=rainbow_p.blue,   bg=nil })
-    hi('BlinkIndentCyan',   { fg=rainbow_p.cyan,   bg=nil })
-    hi('BlinkIndentGreen',  { fg=rainbow_p.green,  bg=nil })
-    hi('BlinkIndentOrange', { fg=rainbow_p.orange, bg=nil })
-    hi('BlinkIndentRed',    { fg=rainbow_p.red,    bg=nil })
-    hi('BlinkIndentViolet', { fg=rainbow_p.violet, bg=nil })
-    hi('BlinkIndentYellow', { fg=rainbow_p.yellow, bg=nil })
+    hi('BlinkIndentBlue',   { fg=p.azure,   bg=nil })
+    hi('BlinkIndentCyan',   { fg=p.cyan,   bg=nil })
+    hi('BlinkIndentGreen',  { fg=p.green,  bg=nil })
+    hi('BlinkIndentOrange', { fg=p.orange, bg=nil })
+    hi('BlinkIndentRed',    { fg=p.red,    bg=nil })
+    hi('BlinkIndentViolet', { fg=p.purple, bg=nil })
+    hi('BlinkIndentYellow', { fg=p.yellow, bg=nil })
   end
 
   -- Terminal colors
@@ -2052,16 +2033,6 @@ H.rgb2hex = function(rgb)
 	local b = H.clip(H.round(rgb.b), 0, 255)
 
 	return string.format("#%02x%02x%02x", r, g, b)
-end
-
-H.blend_hex = function(fg_hex, bg_hex, alpha)
-	local fg, bg = H.hex2rgb(fg_hex), H.hex2rgb(bg_hex)
-
-	return H.rgb2hex({
-		r = alpha * fg.r + (1 - alpha) * bg.r,
-		g = alpha * fg.g + (1 - alpha) * bg.g,
-		b = alpha * fg.b + (1 - alpha) * bg.b,
-	})
 end
 
 -- RGB in [0; 255] <-> Oklab
